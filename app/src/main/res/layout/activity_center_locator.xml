@@ -7,21 +7,47 @@
     tools:context=".CenterLocator">
 
     <EditText
-        android:id="@+id/editTextPin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/editPincode"
+        android:layout_width="216dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_field"
         android:ems="10"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="103dp"
-        tools:layout_editor_absoluteY="22dp" />
+        android:hint="@string/pincode"
+        android:inputType="number"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/editDated"
+        android:layout_width="165dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/inputfield_date"
+        android:cursorVisible="false"
         android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:hint="@string/date"
         android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="75dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.398"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editPincode" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/editDated"
+        app:layout_constraintTop_toBottomOf="@+id/editPincode"
+        app:srcCompat="@drawable/date_picker" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
