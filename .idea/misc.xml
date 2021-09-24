@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Studio-2020.3.1/CoWINNER/app/src/main/res/drawable/input_field.xml" value="0.24375" />
+        <entry key="..\:/Android-Studio-2020.3.1/CoWINNER/app/src/main/res/layout/activity_center_locator.xml" value="0.2234375" />
         <entry key="..\:/Android-Studio-2020.3.1/CoWINNER/app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
       </map>
     </option>
