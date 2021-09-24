@@ -61,7 +61,11 @@ public class CenterLocator extends AppCompatActivity {
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new FetchData().start();
+                if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
+                    Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                }else {
+                    new FetchData().start();
+                }
             }
         });
         imgCal.setOnClickListener(new View.OnClickListener() {
@@ -130,13 +134,9 @@ public class CenterLocator extends AppCompatActivity {
             });
 
             try {
-                if (!editPin.getText().toString().isEmpty() && !editDate.getText().toString().isEmpty()){
-                    pincode = editPin.getText().toString();
-                    date = editDate.getText().toString();
-                    urlAdd = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode="+pincode+"&date="+date;
-                }else {
-                    Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                }
+                pincode = editPin.getText().toString();
+                date = editDate.getText().toString();
+                urlAdd = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode="+pincode+"&date="+date;
                 URL url = new URL(urlAdd);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
