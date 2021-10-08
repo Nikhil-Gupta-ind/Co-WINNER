@@ -75,7 +75,9 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginBottom="8dp"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@mipmap/ic_launcher_round"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"/>
 
                 <TextView
                     android:id="@+id/review"
@@ -100,7 +102,9 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginBottom="8dp"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@mipmap/ic_launcher_round"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"/>
 
                 <TextView
                     android:id="@+id/network"
@@ -125,7 +129,9 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginBottom="8dp"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@mipmap/ic_launcher_round"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"/>
 
                 <TextView
                     android:id="@+id/plugins"
@@ -150,7 +156,9 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginBottom="8dp"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@mipmap/ic_launcher_round"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
                     android:id="@+id/apps"
@@ -172,12 +180,12 @@
         android:layout_width="154dp"
         android:layout_height="154dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="24dp"
         android:src="@mipmap/ic_launcher_round"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -185,7 +193,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Co-WINNER"
+        android:text="Welcome"
         android:textColor="#172646"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -199,7 +207,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Welcome\nto Co-Winner app\n(early access)"
+        android:text="to Co-Winner app\n(early access)"
         android:textAlignment="center"
         android:textColor="#A1A1A1"
         android:textSize="16sp"
@@ -207,6 +215,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="194dp"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="597dp"
+        android:background="@drawable/bg_btn"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subTitle" />
 
     <TextView
 
@@ -223,7 +248,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subTitle"
+        app:layout_constraintTop_toBottomOf="@+id/button"
         app:layout_constraintVertical_bias="0.75" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

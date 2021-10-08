@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         binding.imageView.setAnimation(animation);
         binding.title.setAnimation(animation2);
         binding.subTitle.setAnimation(animation2);
+        binding.button.setAnimation(animation3);
 
         binding.centerLocator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         });
-
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Link not available", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
