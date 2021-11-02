@@ -37,11 +37,7 @@ public class MainActivity extends AppCompatActivity {
         binding.subTitle.setAnimation(animation2);
         binding.button.setAnimation(animation3);
 
-        binding.scrollView.post(new Runnable() {
-            public void run() {
-                binding.scrollView.scrollTo(0, binding.scrollView.getBottom());
-            }
-        });
+
         binding.centerLocator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

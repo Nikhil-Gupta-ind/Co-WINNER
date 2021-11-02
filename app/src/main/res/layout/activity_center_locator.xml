@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CenterLocator">
+    tools:context=".CenterLocator"
+
+    android:paddingBottom="20dp">
 
     <EditText
         android:id="@+id/editPincode"
-        android:layout_width="100dp"
+        android:layout_width="135dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/input_field"
         android:ems="10"
@@ -18,14 +19,14 @@
         android:inputType="number"
         android:maxLength="6"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toStartOf="@+id/editDated"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/editDated"
+        app:layout_constraintEnd_toStartOf="@+id/editDated" />
 
     <EditText
         android:id="@+id/editDated"
         android:layout_width="135dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/inputfield_date"
         android:cursorVisible="false"
         android:ems="10"
@@ -40,7 +41,7 @@
         android:id="@+id/imgCal"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -58,6 +59,18 @@
         app:layout_constraintGuide_percent="0.5"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imgSearch"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/ic_baseline_search_24"
+        app:layout_constraintEnd_toStartOf="@+id/editPincode"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -68,16 +81,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDated" />
 
-    <ImageView
-        android:id="@+id/imgSearch"
-        android:layout_width="73dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/editPincode"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
