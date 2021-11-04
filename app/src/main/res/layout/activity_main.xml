@@ -273,7 +273,7 @@
         android:id="@+id/textView2"
         android:layout_width="194dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:lineSpacingExtra="6dp"
         android:text="Nikhil Gupta ©2021-22"
         android:textAlignment="center"

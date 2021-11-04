@@ -1,6 +1,8 @@
 package com.NikhilGupta.co_winner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -13,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.databinding.ActivityMainBinding;
@@ -34,16 +37,20 @@ import java.util.Calendar;
 public class CenterLocator extends AppCompatActivity {
 
 //    ActivityMainBinding binding;
-    EditText editPin, editDate;
-    ListView listView;
+
     ImageView imgSearch, imgCal;
+    EditText editPin, editDate;
+    TextView tvNoData;
+//    ListView listView;
+    RecyclerView recyclerView;
+    CLRecyclerViewAdapter recyclerViewAdapter;
+    ArrayList<CenterData> centerDataArrayList;
     private int mm, dd, yy;
 
-    ArrayList<String> sessionList;
-    ArrayAdapter<String> adapter;
+//    ArrayList<String> sessionList;
+//    ArrayAdapter<String> adapter;
     Handler handler = new Handler();
     ProgressDialog progressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,11 @@ public class CenterLocator extends AppCompatActivity {
         editPin = findViewById(R.id.editPincode);
         editDate = findViewById(R.id.editDated);
         imgCal = findViewById(R.id.imgCal);
-        listView = findViewById(R.id.listView);
+        tvNoData = findViewById(R.id.noData);
+//        listView = findViewById(R.id.listView);
+        recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
 //        setContentView(binding.getRoot());
 
@@ -118,9 +129,12 @@ public class CenterLocator extends AppCompatActivity {
     }
 
     private void initializeSessionlist() {
-        sessionList = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
-        listView.setAdapter(adapter);
+//        sessionList = new ArrayList<>();
+//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
+//        listView.setAdapter(adapter);
+        centerDataArrayList = new ArrayList<>();
+        recyclerViewAdapter = new CLRecyclerViewAdapter(this,centerDataArrayList);
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
     class FetchData extends Thread{
@@ -159,15 +173,27 @@ public class CenterLocator extends AppCompatActivity {
                 }
 
                 if(!data.isEmpty()){
-
+                    tvNoData.setVisibility(View.INVISIBLE);
                     JSONObject jsonObject = new JSONObject(data);
                     JSONArray sessions = jsonObject.getJSONArray("sessions");
-                    sessionList.clear();
+//                    sessionList.clear();
+                    centerDataArrayList.clear();
                     for(int i=0;i<sessions.length(); i++){
                         JSONObject names = sessions.getJSONObject(i);
-                        String name = names.getString("name");
-                        sessionList.add(name);
+                        String name, address, block, district, state, vaccine, from, to;
+                        name = names.getString("name");
+                        address = names.getString("address");
+                        block = names.getString("block");
+                        district = names.getString("district");
+                        state = names.getString("state");
+                        vaccine = names.getString("vaccine");
+                        from = names.getString("from");
+                        to = names.getString("to");
+//                        sessionList.add(name);
+                        centerDataArrayList.add(new CenterData(name,address,block,district,state,vaccine,from,to));
                     }
+                }else {
+                    tvNoData.setVisibility(View.VISIBLE);
                 }
             } catch (MalformedURLException urlException) {
                 urlException.printStackTrace();
@@ -181,7 +207,8 @@ public class CenterLocator extends AppCompatActivity {
                 public void run() {
                     progressDialog.isShowing();
                     progressDialog.dismiss();
-                    adapter.notifyDataSetChanged();
+//                    adapter.notifyDataSetChanged();
+                    recyclerViewAdapter.notifyDataSetChanged();
                 }
             });
         }
