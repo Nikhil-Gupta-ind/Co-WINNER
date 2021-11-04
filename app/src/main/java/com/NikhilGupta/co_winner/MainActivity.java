@@ -1,9 +1,13 @@
 package com.NikhilGupta.co_winner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         animation2 = AnimationUtils.loadAnimation(this, R.anim.atg_two);
         animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);
         //Pass Animation
-        binding.imageView.setAnimation(animation);
+        binding.cardView2.setAnimation(animation);
         binding.title.setAnimation(animation2);
         binding.subTitle.setAnimation(animation2);
         binding.button.setAnimation(animation3);
@@ -63,6 +67,28 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        binding.button.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        binding.button.setBackgroundResource(R.drawable.bg_btn_bordered);
+                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.black));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // RELEASED
+                        binding.button.setBackgroundResource(R.drawable.bg_btn);
+                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.white));
+                        break;
+                }
+                return false;
+            }
+        });
+
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

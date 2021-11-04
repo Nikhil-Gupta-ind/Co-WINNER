@@ -80,6 +80,11 @@ public class CenterLocator extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String format = "%1$02d"; // two digits
                         editDate.setText(String.format(format,dayOfMonth)+"-"+String.format(format, month)+"-"+year);
+                        if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
+                            Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                        }else {
+                            new FetchData().start();
+                        }
                     }
                 }, mm, dd, yy);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()+1000);
@@ -99,6 +104,11 @@ public class CenterLocator extends AppCompatActivity {
                         month = month+1;
                         String format = "%1$02d"; // two digits
                         editDate.setText(String.format(format,dayOfMonth)+"-"+String.format(format, month)+"-"+year);
+                        if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
+                            Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                        }else {
+                            new FetchData().start();
+                        }
                     }
                 }, mm, dd, yy);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()+1000);
