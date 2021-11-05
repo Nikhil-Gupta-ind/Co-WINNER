@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,7 +38,7 @@ import java.util.Calendar;
 public class CenterLocator extends AppCompatActivity {
 
 //    ActivityMainBinding binding;
-
+    final String TAG = "Test";
     ImageView imgSearch, imgCal;
     EditText editPin, editDate;
     TextView tvNoData;
@@ -65,26 +66,50 @@ public class CenterLocator extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
+        Log.d(TAG, "onCreate: RecyclerView initialized");
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
 //        setContentView(binding.getRoot());
 
 //        initializeSessionlist();
         centerDataArrayList = new ArrayList<>();
+        Log.d(TAG, "onCreate: centerDataArrayList initialized");
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                     Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                    centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
-                    centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
-                    centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
-                    centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
-                    centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
-
-                    recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
-                    recyclerView.setAdapter(recyclerViewAdapter);
+                    // Dummy Data for Testing
+//                    centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 6","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 7","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 8","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 9","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 10","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 11","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 12","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 13","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 14","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 15","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 16","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 17","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 18","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 19","address","block","district","state","vaccine","from","to"));
+//                    centerDataArrayList.add(new CenterData("Center 20","address","block","district","state","vaccine","from","to"));
+//                    for (CenterData element :
+//                            centerDataArrayList) {
+//                        Log.d(TAG, "onClick: "+element.getName()+" "+element.getAddress()+" "+element.getBlock());
+//                    }
+//
+//                    recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+//                    Log.d(TAG, "onClick: RecyclerView Adapter initialized");
+//                    recyclerView.setAdapter(recyclerViewAdapter);
+//                    Log.d(TAG, "onClick: setAdapter done!");
                 }else {
-                    new FetchData().start();
+                    displayList();
                 }
             }
         });
@@ -103,7 +128,7 @@ public class CenterLocator extends AppCompatActivity {
                         if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                             Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
                         }else {
-                            new FetchData().start();
+                            displayList();
                         }
                     }
                 }, mm, dd, yy);
@@ -127,7 +152,7 @@ public class CenterLocator extends AppCompatActivity {
                         if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                             Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
                         }else {
-                            new FetchData().start();
+                            displayList();
                         }
                     }
                 }, mm, dd, yy);
@@ -141,9 +166,21 @@ public class CenterLocator extends AppCompatActivity {
 //        sessionList = new ArrayList<>();
 //        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
 //        listView.setAdapter(adapter);
-//        centerDataArrayList = new ArrayList<>();
-//        recyclerViewAdapter = new CLRecyclerViewAdapter(this,centerDataArrayList);
+        centerDataArrayList = new ArrayList<>();
+        Log.d(TAG, "initializeSessionlist: centerDataArrayList initialized");
+//        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+//        Log.d(TAG, "initializeSessionlist: RecyclerView Adapter initialized");
 //        recyclerView.setAdapter(recyclerViewAdapter);
+//        Log.d(TAG, "initializeSessionlist: setAdapter done!");
+    }
+    private void displayList(){
+        Log.d(TAG, "onClick: Initiating fetch Data");
+        new FetchData().start();
+        Log.d(TAG, "onClick: Fetch Data complete");
+        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+        Log.d(TAG, "onClick: RecyclerView Adapter initialized");
+        recyclerView.setAdapter(recyclerViewAdapter);
+        Log.d(TAG, "onClick: setAdapter done!");
     }
 
     class FetchData extends Thread{
@@ -155,12 +192,11 @@ public class CenterLocator extends AppCompatActivity {
         @Override
         public void run() {
 
-
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     progressDialog = new ProgressDialog(CenterLocator.this);
-                    progressDialog.setMessage("Fetch data");
+                    progressDialog.setMessage("Fetching data...");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                 }
@@ -176,13 +212,15 @@ public class CenterLocator extends AppCompatActivity {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String line;
-
+                Log.d(TAG, "run: reading data from api");
                 while ((line = bufferedReader.readLine()) != null){
                     data = data + line;
                 }
 
                 if(!data.isEmpty()){
                     tvNoData.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "run: Starting JSON parsing");
                     JSONObject jsonObject = new JSONObject(data);
                     JSONArray sessions = jsonObject.getJSONArray("sessions");
 //                    sessionList.clear();
@@ -192,17 +230,22 @@ public class CenterLocator extends AppCompatActivity {
                         String name, address, block, district, state, vaccine, from, to;
                         name = names.getString("name");
                         address = names.getString("address");
-                        block = names.getString("block");
-                        district = names.getString("district");
-                        state = names.getString("state");
+                        block = names.getString("block_name");
+                        district = names.getString("district_name");
+                        state = names.getString("state_name");
                         vaccine = names.getString("vaccine");
                         from = names.getString("from");
                         to = names.getString("to");
 //                        sessionList.add(name);
+                        Log.d(TAG, "run: "+name+address+block+district+state+vaccine+from+to);
                         centerDataArrayList.add(new CenterData(name,address,block,district,state,vaccine,from,to));
+                        for (CenterData data : centerDataArrayList) {
+                            Log.d(TAG, "run: "+data.getName()+data.getAddress()+data.getBlock()+"\n");
+                        }
                     }
                 }else {
                     tvNoData.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
                 }
             } catch (MalformedURLException urlException) {
                 urlException.printStackTrace();
