@@ -3,14 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    app:cardCornerRadius="10dp">
+    android:layout_height="220dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="375dp"
+        android:layout_width="350dp"
         android:layout_height="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         app:cardCornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,6 +39,7 @@
                 android:text="Address"
                 app:layout_constraintStart_toStartOf="@+id/name"
                 app:layout_constraintTop_toBottomOf="@+id/name" />
+
             <TextView
                 android:id="@+id/block_name"
                 android:layout_width="wrap_content"
@@ -49,6 +47,7 @@
                 android:text="Block Name"
                 app:layout_constraintStart_toStartOf="@+id/address"
                 app:layout_constraintTop_toBottomOf="@+id/address" />
+
             <TextView
                 android:id="@+id/district"
                 android:layout_width="wrap_content"
@@ -56,6 +55,7 @@
                 android:text="District"
                 app:layout_constraintStart_toStartOf="@+id/block_name"
                 app:layout_constraintTop_toBottomOf="@+id/block_name" />
+
             <TextView
                 android:id="@+id/state"
                 android:layout_width="wrap_content"
@@ -68,13 +68,15 @@
                 android:id="@+id/vaccine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
                 android:text="Covishield"
                 android:textAllCaps="true"
                 android:textColor="@color/teal_200"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/from"
-                app:layout_constraintEnd_toEndOf="@+id/from"
-                app:layout_constraintStart_toEndOf="@+id/from" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/state"
+                app:layout_constraintVertical_bias="0.571" />
 
             <TextView
                 android:id="@+id/from"
@@ -91,8 +93,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00:00"
-                app:layout_constraintStart_toEndOf="@+id/vaccine"
-                app:layout_constraintTop_toBottomOf="@+id/vaccine" />
+                app:layout_constraintBaseline_toBaselineOf="@+id/from"
+                app:layout_constraintStart_toEndOf="@+id/vaccine" />
 
             <TextView
                 android:id="@+id/moreInfo"

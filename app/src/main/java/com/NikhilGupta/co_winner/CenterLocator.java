@@ -68,12 +68,21 @@ public class CenterLocator extends AppCompatActivity {
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
 //        setContentView(binding.getRoot());
 
-        initializeSessionlist();
+//        initializeSessionlist();
+        centerDataArrayList = new ArrayList<>();
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                     Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                    centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
+                    centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
+                    centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
+                    centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
+                    centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
+
+                    recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+                    recyclerView.setAdapter(recyclerViewAdapter);
                 }else {
                     new FetchData().start();
                 }
@@ -132,9 +141,9 @@ public class CenterLocator extends AppCompatActivity {
 //        sessionList = new ArrayList<>();
 //        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
 //        listView.setAdapter(adapter);
-        centerDataArrayList = new ArrayList<>();
-        recyclerViewAdapter = new CLRecyclerViewAdapter(this,centerDataArrayList);
-        recyclerView.setAdapter(recyclerViewAdapter);
+//        centerDataArrayList = new ArrayList<>();
+//        recyclerViewAdapter = new CLRecyclerViewAdapter(this,centerDataArrayList);
+//        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
     class FetchData extends Thread{

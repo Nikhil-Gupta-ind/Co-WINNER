@@ -34,13 +34,13 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
     public void onBindViewHolder(@NonNull CLRecyclerViewAdapter.CLViewHolder holder, int position) {
         CenterData centerData = centerDataArrayList.get(position);
         holder.name.setText(centerData.getName());
-        holder.address.setText(centerData.getName());
-        holder.block.setText(centerData.getName());
-        holder.district.setText(centerData.getName());
-        holder.state.setText(centerData.getName());
-        holder.vaccine.setText(centerData.getName());
-        holder.from.setText(centerData.getName());
-        holder.to.setText(centerData.getName());
+        holder.address.setText(centerData.getAddress());
+        holder.block.setText(centerData.getBlock());
+        holder.district.setText(centerData.getDistrict());
+        holder.state.setText(centerData.getState());
+        holder.vaccine.setText(centerData.getVaccine());
+        holder.from.setText(centerData.getFrom());
+        holder.to.setText(centerData.getTo());
     }
 
     @Override
