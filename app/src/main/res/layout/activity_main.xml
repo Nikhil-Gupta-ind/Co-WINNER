@@ -6,19 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="230dp"
-        android:background="@drawable/vaccine_banner"/>
-    </androidx.cardview.widget.CardView>
+        android:background="@drawable/vaccine_banner"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -208,11 +204,12 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp">
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="154dp"
-            android:layout_height="154dp"
-            android:src="@drawable/app_logo"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="154dp"
+                android:layout_height="154dp"
+                android:src="@drawable/app_logo" />
         </androidx.cardview.widget.CardView>
 
         <TextView
