@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -92,7 +93,20 @@ public class MainActivity extends AppCompatActivity {
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Link not available", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Link not available", Toast.LENGTH_SHORT).show();
+                String textMessage = "https://github.com/Nikhil-Gupta-ind/jCloud";
+                // Create the text message with a string.
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, textMessage);
+                shareIntent.setType("text/plain");
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                // Try to invoke the intent.
+                try {
+                    startActivity(Intent.createChooser(shareIntent, "Share Co-WINNER App"));
+                } catch (ActivityNotFoundException e) {
+                    // Define what your app should do if no activity can handle the intent.
+                }
             }
         });
     }

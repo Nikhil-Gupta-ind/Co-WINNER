@@ -37,19 +37,19 @@ import java.util.Calendar;
 
 public class CenterLocator extends AppCompatActivity {
 
-//    ActivityMainBinding binding;
+    //    ActivityMainBinding binding;
     final String TAG = "Test";
     ImageView imgSearch, imgCal;
     EditText editPin, editDate;
     TextView tvNoData;
-//    ListView listView;
+    //    ListView listView;
     RecyclerView recyclerView;
     CLRecyclerViewAdapter recyclerViewAdapter;
     ArrayList<CenterData> centerDataArrayList;
     private int mm, dd, yy;
 
-//    ArrayList<String> sessionList;
-//    ArrayAdapter<String> adapter;
+    //    ArrayList<String> sessionList;
+    //    ArrayAdapter<String> adapter;
     Handler handler = new Handler();
     ProgressDialog progressDialog;
 
@@ -62,15 +62,15 @@ public class CenterLocator extends AppCompatActivity {
         editDate = findViewById(R.id.editDated);
         imgCal = findViewById(R.id.imgCal);
         tvNoData = findViewById(R.id.noData);
-//        listView = findViewById(R.id.listView);
+        //        listView = findViewById(R.id.listView);
         recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
         Log.d(TAG, "onCreate: RecyclerView initialized");
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
+        //        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        //        setContentView(binding.getRoot());
 
-//        initializeSessionlist();
+        //        initializeSessionlist();
         centerDataArrayList = new ArrayList<>();
         Log.d(TAG, "onCreate: centerDataArrayList initialized");
         imgSearch.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +116,7 @@ public class CenterLocator extends AppCompatActivity {
         imgCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final Calendar calendar = Calendar.getInstance();
                 mm = calendar.get(Calendar.DATE);
                 dd = calendar.get(Calendar.MONTH);
@@ -134,11 +135,13 @@ public class CenterLocator extends AppCompatActivity {
                 }, mm, dd, yy);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()+1000);
                 datePickerDialog.show();
+
             }
         });
         editDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final Calendar calendar = Calendar.getInstance();
                 mm = calendar.get(Calendar.DATE);
                 dd = calendar.get(Calendar.MONTH);
@@ -158,6 +161,7 @@ public class CenterLocator extends AppCompatActivity {
                 }, mm, dd, yy);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()+1000);
                 datePickerDialog.show();
+
             }
         });
     }
@@ -173,6 +177,7 @@ public class CenterLocator extends AppCompatActivity {
 //        recyclerView.setAdapter(recyclerViewAdapter);
 //        Log.d(TAG, "initializeSessionlist: setAdapter done!");
     }
+
     private void displayList(){
         Log.d(TAG, "onClick: Initiating fetch Data");
         new FetchData().start();
@@ -206,11 +211,13 @@ public class CenterLocator extends AppCompatActivity {
                 pincode = editPin.getText().toString();
                 date = editDate.getText().toString();
                 urlAdd = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode="+pincode+"&date="+date;
+
                 URL url = new URL(urlAdd);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
                 String line;
                 Log.d(TAG, "run: reading data from api");
                 while ((line = bufferedReader.readLine()) != null){
@@ -218,8 +225,8 @@ public class CenterLocator extends AppCompatActivity {
                 }
 
                 if(!data.isEmpty()){
-                    tvNoData.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+//                    tvNoData.setVisibility(View.INVISIBLE);
+//                    recyclerView.setVisibility(View.VISIBLE);
                     Log.d(TAG, "run: Starting JSON parsing");
                     JSONObject jsonObject = new JSONObject(data);
                     JSONArray sessions = jsonObject.getJSONArray("sessions");
@@ -243,16 +250,13 @@ public class CenterLocator extends AppCompatActivity {
                             Log.d(TAG, "run: "+data.getName()+data.getAddress()+data.getBlock()+"\n");
                         }
                     }
-                }else {
-                    tvNoData.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
                 }
-            } catch (MalformedURLException urlException) {
+//                else {
+//                    tvNoData.setVisibility(View.VISIBLE);
+//                    recyclerView.setVisibility(View.INVISIBLE);
+//                }
+            } catch (IOException | JSONException urlException) {
                 urlException.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
             handler.post(new Runnable() {
                 @Override
