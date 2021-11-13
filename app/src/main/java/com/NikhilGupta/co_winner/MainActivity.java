@@ -32,15 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        animation = AnimationUtils.loadAnimation(this, R.anim.atg);
-        animation2 = AnimationUtils.loadAnimation(this, R.anim.atg_two);
-        animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);
-        //Pass Animation
-        binding.cardView2.setAnimation(animation);
-        binding.title.setAnimation(animation2);
-        binding.subTitle.setAnimation(animation2);
-        binding.button.setAnimation(animation3);
+        startAnimation();
 
 
         binding.centerLocator.setOnClickListener(new View.OnClickListener() {
@@ -109,5 +101,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void startAnimation(){
+        animation = AnimationUtils.loadAnimation(this, R.anim.atg);
+        animation2 = AnimationUtils.loadAnimation(this, R.anim.atg_two);
+        animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);
+        //Pass Animation
+        binding.cardView2.setAnimation(animation);
+        binding.title.setAnimation(animation2);
+        binding.subTitle.setAnimation(animation2);
+        binding.button.setAnimation(animation3);
     }
 }

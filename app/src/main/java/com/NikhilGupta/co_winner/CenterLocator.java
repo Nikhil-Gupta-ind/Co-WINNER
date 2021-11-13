@@ -1,6 +1,7 @@
 package com.NikhilGupta.co_winner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,10 +54,12 @@ public class CenterLocator extends AppCompatActivity {
     Handler handler = new Handler();
     ProgressDialog progressDialog;
 
+    CardView cardView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_center_locator);
+        cardView = findViewById(R.id.search_bar_card);
         imgSearch = findViewById(R.id.imgSearch);
         editPin = findViewById(R.id.editPincode);
         editDate = findViewById(R.id.editDated);
@@ -64,7 +67,7 @@ public class CenterLocator extends AppCompatActivity {
         tvNoData = findViewById(R.id.noData);
         //        listView = findViewById(R.id.listView);
         recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
         Log.d(TAG, "onCreate: RecyclerView initialized");
         //        binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -73,6 +76,8 @@ public class CenterLocator extends AppCompatActivity {
         //        initializeSessionlist();
         centerDataArrayList = new ArrayList<>();
         Log.d(TAG, "onCreate: centerDataArrayList initialized");
+
+        startAnimation();
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +170,21 @@ public class CenterLocator extends AppCompatActivity {
             }
         });
     }
-
+    private void startAnimation(){
+        cardView.setCardElevation(16);
+        Runnable endAction = new Runnable() {
+            @Override
+            public void run() {
+                cardView.animate().translationZ(16);
+            }
+        };
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cardView.animate().translationZ(32).withEndAction(endAction);
+            }
+        },1000);
+    }
     private void initializeSessionlist() {
 //        sessionList = new ArrayList<>();
 //        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
