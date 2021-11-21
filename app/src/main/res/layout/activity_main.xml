@@ -42,7 +42,7 @@
     android:layout_height="200dp"
     android:id="@+id/cardView"
     app:cardCornerRadius="20dp"
-    app:cardElevation="16dp"
+    app:cardElevation="8dp"
     android:layout_marginStart="16dp"
     android:layout_marginTop="24dp"
     android:layout_marginEnd="16dp"

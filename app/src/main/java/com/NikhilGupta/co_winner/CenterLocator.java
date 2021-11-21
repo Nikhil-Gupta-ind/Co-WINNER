@@ -113,6 +113,8 @@ public class CenterLocator extends AppCompatActivity {
 //                    Log.d(TAG, "onClick: RecyclerView Adapter initialized");
 //                    recyclerView.setAdapter(recyclerViewAdapter);
 //                    Log.d(TAG, "onClick: setAdapter done!");
+                }else if (editPin.getText().toString().length() <6){
+                    Toast.makeText(CenterLocator.this,"Incorrect pincode",Toast.LENGTH_SHORT).show();
                 }else {
                     displayList();
                 }
@@ -133,6 +135,8 @@ public class CenterLocator extends AppCompatActivity {
                         editDate.setText(String.format(format,dayOfMonth)+"-"+String.format(format, month)+"-"+year);
                         if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                             Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                        }else if (editPin.getText().toString().length() <6){
+                            Toast.makeText(CenterLocator.this,"Incorrect pincode",Toast.LENGTH_SHORT).show();
                         }else {
                             displayList();
                         }
@@ -159,7 +163,9 @@ public class CenterLocator extends AppCompatActivity {
                         editDate.setText(String.format(format,dayOfMonth)+"-"+String.format(format, month)+"-"+year);
                         if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()){
                             Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                        }else {
+                        }else if (editPin.getText().toString().length() <6){
+                            Toast.makeText(CenterLocator.this,"Incorrect pincode",Toast.LENGTH_SHORT).show();
+                        }else{
                             displayList();
                         }
                     }
@@ -175,7 +181,7 @@ public class CenterLocator extends AppCompatActivity {
         Runnable endAction = new Runnable() {
             @Override
             public void run() {
-                cardView.animate().translationZ(16);
+                cardView.animate().translationZ(8);
             }
         };
         new Handler().postDelayed(new Runnable() {
@@ -275,6 +281,7 @@ public class CenterLocator extends AppCompatActivity {
 //                    recyclerView.setVisibility(View.INVISIBLE);
 //                }
             } catch (IOException | JSONException urlException) {
+                tvNoData.setText(getString(R.string.no_internet));
                 urlException.printStackTrace();
             }
             handler.post(new Runnable() {
@@ -284,6 +291,7 @@ public class CenterLocator extends AppCompatActivity {
                     progressDialog.dismiss();
 //                    adapter.notifyDataSetChanged();
                     recyclerViewAdapter.notifyDataSetChanged();
+                    tvNoData.setText(getString(R.string.error_message));
                 }
             });
         }

@@ -3,5 +3,7 @@
     <string name="center_locator">Center Locator</string>
     <string name="pincode">Pincode</string>
     <string name="date">Date</string>
-    <string name="error_message">No Data found!\nCheck another date</string>
+    <string name="error_message">No center found!\nTry another\ndate or pincode</string>
+    <string name="search_message">Enter pincode &amp; date\nto find the center.</string>
+    <string name="no_internet">Check your internet\nConnection!</string>
 </resources>

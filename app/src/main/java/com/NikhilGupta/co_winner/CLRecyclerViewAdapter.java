@@ -37,9 +37,16 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
     public void onBindViewHolder(@NonNull CLRecyclerViewAdapter.CLViewHolder holder, int position) {
         CenterData centerData = centerDataArrayList.get(position);
         holder.name.setText(centerData.getName());
-        holder.address.setText(centerData.getAddress());
-        holder.block.setText(centerData.getBlock());
-        holder.district.setText(centerData.getDistrict());
+
+        String address = centerData.getAddress();
+        if (!centerData.getBlock().equals(centerData.getDistrict())){
+            holder.address.setText(String.format("Address:\n%s,\n%s,\n%s", address, centerData.getBlock(), centerData.getDistrict()));
+        } else
+        holder.address.setText(String.format("Address:\n%s,\n%s,", address,centerData.getDistrict()));
+
+//        holder.block.setText(centerData.getBlock());
+//        holder.district.setText(centerData.getDistrict());
+
         holder.state.setText(centerData.getState());
         holder.vaccine.setText(centerData.getVaccine());
         holder.from.setText(centerData.getFrom());
@@ -58,8 +65,8 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
             super(itemView);
             name = itemView.findViewById(R.id.name);
             address = itemView.findViewById(R.id.address);
-            block = itemView.findViewById(R.id.block_name);
-            district = itemView.findViewById(R.id.district);
+//            block = itemView.findViewById(R.id.block_name);
+//            district = itemView.findViewById(R.id.district);
             state = itemView.findViewById(R.id.state);
             vaccine = itemView.findViewById(R.id.vaccine);
             from = itemView.findViewById(R.id.from);

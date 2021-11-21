@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     Animation animation, animation2 , animation3;
 
+    Toast toast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,19 +46,25 @@ public class MainActivity extends AppCompatActivity {
         binding.certificate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Working on it!", Toast.LENGTH_SHORT).show();
+                if (toast!=null) toast.cancel();
+                toast = Toast.makeText(MainActivity.this, "Working on it!", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
         binding.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                if (toast!=null) toast.cancel();
+                toast=Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
         binding.more2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                if (toast!=null) toast.cancel();
+                toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 

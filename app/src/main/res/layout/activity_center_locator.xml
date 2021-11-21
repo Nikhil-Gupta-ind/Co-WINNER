@@ -123,14 +123,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
-        android:text="@string/error_message"
+        android:text="@string/search_message"
         android:textAlignment="center"
         android:textSize="25sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar_card" />
+        app:layout_constraintTop_toBottomOf="@+id/search_bar_card"
+        app:layout_constraintVertical_bias="0.20" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
