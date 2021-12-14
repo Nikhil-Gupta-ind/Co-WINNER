@@ -1,12 +1,13 @@
 package com.NikhilGupta.co_winner;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,8 +16,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.databinding.ActivityMainBinding;
+import com.NikhilGupta.co_winner.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    private NetworkBroadcastReceiver networkBroadcastReceiver;
 
     @Override
     public void onBackPressed() {
@@ -24,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     ActivityMainBinding binding;
-    Animation animation, animation2 , animation3;
+    Animation animation, animation2, animation3;
 
+    SharedPreferences sharedPreferences;
     Toast toast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         startAnimation();
 
+        sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
+        String readToken = sharedPreferences.getString("mToken", null);
+        if (readToken != null){
+            Toast.makeText(this, ""+readToken, Toast.LENGTH_SHORT).show();
+        }
 
         binding.centerLocator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,23 +57,28 @@ public class MainActivity extends AppCompatActivity {
         binding.certificate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toast!=null) toast.cancel();
-                toast = Toast.makeText(MainActivity.this, "Working on it!", Toast.LENGTH_SHORT);
-                toast.show();
+                // First check if the user token != null
+                if (sharedPreferences.getString("mToken",null) == null){
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                } else {
+                    if (toast!=null) toast.cancel();
+                    toast = Toast.makeText(MainActivity.this, "Coming Up!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
         binding.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toast!=null) toast.cancel();
-                toast=Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
+                if (toast != null) toast.cancel();
+                toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
         binding.more2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toast!=null) toast.cancel();
+                if (toast != null) toast.cancel();
                 toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -72,17 +88,17 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         binding.button.setBackgroundResource(R.drawable.bg_btn_bordered);
-                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.black));
+                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         // RELEASED
                         binding.button.setBackgroundResource(R.drawable.bg_btn);
-                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.white));
+                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white));
                         break;
                 }
                 return false;
@@ -110,7 +126,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startAnimation(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        networkBroadcastReceiver = new NetworkBroadcastReceiver(this);
+        registerReceiver(networkBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkBroadcastReceiver);
+    }
+
+    private void startAnimation() {
         animation = AnimationUtils.loadAnimation(this, R.anim.atg);
         animation2 = AnimationUtils.loadAnimation(this, R.anim.atg_two);
         animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);

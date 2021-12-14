@@ -6,4 +6,10 @@
     <string name="error_message">No center found!\nTry another\ndate or pincode</string>
     <string name="search_message">Enter pincode &amp; date\nto find the center.</string>
     <string name="no_internet">Check your internet\nConnection!</string>
+    <string name="no_connection">No Connection</string>
+    <string name="back_online">Back Online</string>
+    <string name="code_200">Successful!</string>
+    <string name="code_400">Invalid OTP!</string>
+    <string name="code_401">Unauthorised Access</string>
+    <string name="code_500">Internal Server Error</string>
 </resources>

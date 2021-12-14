@@ -19,6 +19,7 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
     private Context context;
     private ArrayList<CenterData> centerDataArrayList;
     final String TAG = "Test";
+
     public CLRecyclerViewAdapter(Context context, ArrayList<CenterData> centerDataArrayList) {
         this.context = context;
         this.centerDataArrayList = centerDataArrayList;
@@ -28,7 +29,7 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
     @NonNull
     @Override
     public CLRecyclerViewAdapter.CLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vh_center_locator,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vh_center_locator, parent, false);
         Log.d(TAG, "onCreateViewHolder: returning created ViewHolder");
         return new CLViewHolder(view);
     }
@@ -39,10 +40,10 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
         holder.name.setText(centerData.getName());
 
         String address = centerData.getAddress();
-        if (!centerData.getBlock().equals(centerData.getDistrict())){
+        if (!centerData.getBlock().equals(centerData.getDistrict())) {
             holder.address.setText(String.format("Address:\n%s,\n%s,\n%s", address, centerData.getBlock(), centerData.getDistrict()));
         } else
-        holder.address.setText(String.format("Address:\n%s,\n%s,", address,centerData.getDistrict()));
+            holder.address.setText(String.format("Address:\n%s,\n%s,", address, centerData.getDistrict()));
 
 //        holder.block.setText(centerData.getBlock());
 //        holder.district.setText(centerData.getDistrict());
@@ -61,6 +62,7 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
 
     public class CLViewHolder extends RecyclerView.ViewHolder {
         TextView name, address, block, district, state, vaccine, from, to;
+
         public CLViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);

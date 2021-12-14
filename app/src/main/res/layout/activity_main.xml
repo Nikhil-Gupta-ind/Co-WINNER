@@ -2,276 +2,288 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#3703DAC5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3703DAC5"
     tools:context=".MainActivity">
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:background="@drawable/vaccine_banner"
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50121653" />
-
-    <TextView
-        android:id="@+id/userpic"
-        android:layout_width="71dp"
-        android:layout_height="71dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:src="@mipmap/ic_launcher_round"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-
-
-
-<androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:id="@+id/cardView"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="24dp"
-    android:layout_marginEnd="16dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/userpic">
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/mainmenu"
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:background="@drawable/vaccine_banner"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/userpic"
+                android:layout_width="71dp"
+                android:layout_height="71dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="12dp"
-                android:text="Vaccine"
-                android:textColor="#818181"
-                android:textSize="16sp" />
+                android:layout_marginTop="50dp"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userpic">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/mainmenu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="Vaccine"
+                        android:textColor="#818181"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/centerLocator"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:src="@drawable/center_locator" />
+
+                            <TextView
+                                android:id="@+id/review"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Center Locator"
+                                android:textAlignment="center"
+                                android:textColor="#172646"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/certificate"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:src="@drawable/certificate" />
+
+                            <TextView
+                                android:id="@+id/network"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Certificate Download"
+                                android:textAlignment="center"
+                                android:textColor="#172646"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/more"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:src="@mipmap/ic_launcher_round" />
+
+                            <TextView
+                                android:id="@+id/plugins"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="More Features"
+                                android:textAlignment="center"
+                                android:textColor="#172646"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/more2"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:src="@mipmap/ic_launcher_round" />
+
+                            <TextView
+                                android:id="@+id/apps"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="More Features"
+                                android:textAlignment="center"
+                                android:textColor="#172646"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="4">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardView">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="79dp">
 
                     <ImageView
-                        android:id="@+id/centerLocator"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:src="@drawable/center_locator" />
+                        android:id="@+id/imageView"
+                        android:layout_width="154dp"
+                        android:layout_height="154dp"
+                        android:src="@drawable/app_logo" />
+                </androidx.cardview.widget.CardView>
 
-                    <TextView
-                        android:id="@+id/review"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Center Locator"
-                        android:textAlignment="center"
-                        android:textColor="#172646"
-                        android:textSize="16dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:id="@+id/certificate"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:src="@drawable/certificate" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Welcome"
+                    android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imageView" />
 
-                    <TextView
-                        android:id="@+id/network"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Certificate Download"
-                        android:textAlignment="center"
-                        android:textColor="#172646"
-                        android:textSize="16dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/subTitle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="8dp"
+                    android:lineSpacingExtra="6dp"
+                    android:text="to Co-Winner app"
+                    android:textAlignment="center"
+                    android:textColor="#172646"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
 
-                    <ImageView
-                        android:id="@+id/more"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:src="@mipmap/ic_launcher_round" />
-
-                    <TextView
-                        android:id="@+id/plugins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="More Features"
-                        android:textAlignment="center"
-                        android:textColor="#172646"
-                        android:textSize="16dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <android.widget.Button
+                    android:id="@+id/button"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/more2"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:src="@mipmap/ic_launcher_round" />
-
-                    <TextView
-                        android:id="@+id/apps"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="More Features"
-                        android:textAlignment="center"
-                        android:textColor="#172646"
-                        android:textSize="16dp" />
-
-                </LinearLayout>
-
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_btn"
+                    android:text="Share"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/subTitle"
+                    tools:layout_editor_absoluteX="158dp"
+                    tools:layout_editor_absoluteY="597dp" />
             </LinearLayout>
 
-        </LinearLayout>
-</androidx.cardview.widget.CardView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
-        app:layout_constraintBottom_toTopOf="@id/textView2">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="79dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="154dp"
-                android:layout_height="154dp"
-                android:src="@drawable/app_logo" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Welcome"
-            android:textColor="#172646"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageView" />
-
-        <TextView
-            android:id="@+id/subTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="8dp"
-            android:lineSpacingExtra="6dp"
-            android:text="to Co-Winner app"
-            android:textAlignment="center"
-            android:textColor="#A1A1A1"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <android.widget.Button
-            android:id="@+id/button"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_btn"
-            android:text="Share"
-            android:textColor="@color/white"
-            android:textAllCaps="false"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subTitle"
-            tools:layout_editor_absoluteX="158dp"
-            tools:layout_editor_absoluteY="597dp" />
-
-
-    </LinearLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="194dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:lineSpacingExtra="6dp"
         android:text="Nikhil Gupta ©2021-22"
         android:textAlignment="center"
@@ -279,5 +291,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/network_status"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/teal_200"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/network_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/back_online"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
