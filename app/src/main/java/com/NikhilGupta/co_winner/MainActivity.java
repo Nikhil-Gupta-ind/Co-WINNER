@@ -122,11 +122,15 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetRL = findViewById(R.id.idRLSheet);
         sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
 
+        /**
+         * An important step here to prefix 'Bearer ' to mToken
+         */
         mToken = sharedPreferences.getString("mToken", null);
         if (mToken != null) {
             mToken = "Bearer " + mToken;
             // change menu item name on the basis of token
             Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
+            binding.centerLocator.performClick();
         }
 
         binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CenterLocator.class)));
@@ -317,7 +321,8 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         Log.d(TAG, "onResponse: Download successful!");
-                        Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
+                        Toast.makeText(MainActivity.this, "Download Successful!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(binding.mainLayout, "Check your downloads folder", Snackbar.LENGTH_LONG)
                                 .show();
 
                         // Show an option to open pdf

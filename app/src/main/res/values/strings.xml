@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Co-WINNER</string>
-    <string name="center_locator">Center Locator</string>
     <string name="pincode">Pincode</string>
     <string name="date">Date</string>
     <string name="error_message">No center found!\nTry another\ndate or pincode</string>
