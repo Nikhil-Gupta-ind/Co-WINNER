@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501116313894",
+    "project_id": "co-winner",
+    "storage_bucket": "co-winner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501116313894:android:1a63bf5a584c6c4da2a1e7",
+        "android_client_info": {
+          "package_name": "com.NikhilGupta.co_winner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501116313894-4ho19dcuc8lea29husmgm7sms34utij3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVy7b7u_QAdj13g_x_eEwr3BmuAdPM2mY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501116313894-4ho19dcuc8lea29husmgm7sms34utij3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

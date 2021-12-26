@@ -54,5 +54,7 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
             networkLabel.setText(ActivityContext.getResources().getString(R.string.no_connection));
             networkStatus.setVisibility(View.VISIBLE);
         }
+
+//        if (context instanceof LoginActivity) getOtp button enabled false
     }
 }

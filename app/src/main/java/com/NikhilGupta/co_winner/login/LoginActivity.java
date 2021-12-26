@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.MainActivity;
@@ -33,11 +35,18 @@ import org.json.JSONObject;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     private static final String TAG = "Test";
     public ActivityLoginBinding binding;
@@ -49,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mToken;
     private SaveTxnId saveTxnId;
     private UserToken userToken;
+    Thread timer;
 
     NetworkBroadcastReceiver networkBroadcastReceiver;
 
@@ -107,13 +117,21 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        binding.resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOtpBT.setEnabled(true);
+                getOtpBT.performClick();
+            }
+        });
     }
 
     public void getOtp(View view) {
         binding.otpLabel.setVisibility(View.VISIBLE);
         binding.otp.setVisibility(View.VISIBLE);
-        binding.textView.setVisibility(View.VISIBLE);
-        binding.resend.setVisibility(View.VISIBLE);
+        binding.textView.setVisibility(View.INVISIBLE);
+        binding.resend.setVisibility(View.INVISIBLE);
         binding.getOtp.setEnabled(false);
 
         String mMobileNo = binding.mobile.getText().toString();
@@ -123,6 +141,41 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "OTP Sent", Toast.LENGTH_SHORT).show();
     }
 
+    private void startTimer() { // options: run on new thread, make it asynchronous, use AsyncTask, use AsyncTaskLoader Or user Executor. Or Pass the timer to async
+        Log.d(TAG, "startTimer: control is here");
+        binding.textView.setVisibility(View.VISIBLE);
+        binding.resend.setVisibility(View.INVISIBLE);
+        binding.resendText.setVisibility(View.VISIBLE);
+        binding.tvTimer.setVisibility(View.VISIBLE);
+
+        timer = new Thread() {
+            int interval = 180;
+            @Override
+            public void run() {
+                try {
+                    while (interval > 0) {
+                        Log.d(TAG, "run: "+(interval));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.tvTimer.setText(getString(R.string.sec,--interval));
+                                if (interval == 0){
+                                    binding.resend.setVisibility(View.VISIBLE);
+                                    binding.resendText.setVisibility(View.INVISIBLE);
+                                    binding.tvTimer.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        });
+                        sleep(1000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        timer.start();
+//        MyTimerTask.execute(timer);
+    }
 
     private void requestOtp(String mMobileNo) {
         apiInterface = MyRetro.getInstance().create(APIInterface.class);
@@ -139,7 +192,9 @@ public class LoginActivity extends AppCompatActivity {
                     case 200:
 //                        saveTxnId = new SaveTxnId(response.body().txnId);
                         mTxnId = response.body().txnId;
+                        Log.d(TAG, "txnId: >\n" + mTxnId);
                         Toast.makeText(LoginActivity.this, "OTP Sent", Toast.LENGTH_SHORT).show();
+//                        startTimer(); // probably network transaction and timer is updating on same Ui thread hence collapsing
                         break;
 
                     case 400:
@@ -158,21 +213,12 @@ public class LoginActivity extends AppCompatActivity {
                         break;
 
                 }
-                /*if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: " + response.body());
-//                    saveTxnId = new SaveTxnId(response.body().txnId);
-                    mTxnId = response.body().txnId;
-                    Log.d(TAG, "txnId: >\n" + mTxnId);
-//                    7ea75a3e-caf4-4a8c-971c-b56f83ec339b
-                    Toast.makeText(LoginActivity.this, "OTP Sent", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "onResponse: Something is wrong" + response);
-                }*/
             }
 
             @Override
             public void onFailure(@NonNull Call<SaveTxnId> call, @NonNull Throwable t) {
-                Log.d(TAG, "onFailure: " + t);
+                Log.d(TAG, "onFailure: " + t.getMessage());
+                Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -189,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void verify(View view) {
         binding.loading.setVisibility(View.VISIBLE);
+        binding.verify.setEnabled(false);
 
         mOTP = binding.otp.getText().toString();
         Log.d(TAG, "mOTP: " + mOTP);
@@ -210,8 +257,9 @@ public class LoginActivity extends AppCompatActivity {
                         binding.networkLabel.setText(getResources().getString(R.string.code_200));
                         binding.networkStatus.setVisibility(View.VISIBLE);
                         binding.loading.setVisibility(View.GONE);
-
                         mToken = response.body().token;
+                        Log.d(TAG, "onResponse: " + response);
+                        Log.d(TAG, "saving token in sharedprefs: "+mToken);
                         SharedPreferences sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("mToken",mToken);
@@ -219,11 +267,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         String readToken = sharedPreferences.getString("mToken", null);
                         if (readToken != null){
-                            Toast.makeText(LoginActivity.this, ""+readToken, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, ""+readToken, Toast.LENGTH_SHORT).show();
                         }
 
 //                        UserToken userToken = new UserToken(mToken);
-                        // BTW later we'll try to call the calling activity
+                        // BTW later we'll try to call the calling activity by writing finish()
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         break;
 
@@ -283,100 +331,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<UserToken> call, @NonNull Throwable t) {
-
+                Log.d(TAG, "onFailure: " + t.getMessage());
+                Toast.makeText(LoginActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-
-    private void requestOtp2() {
-        String url = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP";
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-//                        textView.setText("Response: " + response.toString());
-                        Log.d(TAG, "onResponse: " + response.toString());
-                    }
-                },
-                        new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO: Handle error
-                                Log.d(TAG, "onErrorResponse: Error");
-                            }
-                        }) {
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-//                return super.getParams();
-                Log.d(TAG, "getParams: params passed");
-                Map<String, String> params = new HashMap<>();
-                params.put("mobile", "9876543210");
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-//                return super.getHeaders();
-                Log.d(TAG, "getHeaders: Headers given");
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-        };
-        // Access the RequestQueue through your singleton class.
-//        SaveTxnId.getInstance().addToRequestQueue(jsonObjectRequest);
-    }
-
-    private void requestOtp1() {
-        String requestUrl = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP";
-        /*String mPOST = "/api/v2/auth/public/generateOTP";
-        String mHost = "cdn-api.co-vin.in";
-        String maccept = "application/json";
-        String mContent_Type = "application/json";
-        String mContent_length = "23"; // int
-        try {
-            JSONObject jsonBody = new JSONObject("{\"mobile\":\"9876543210\"}");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-        StringRequest postRequest = new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "onResponse: " + response);
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: " + error.toString());
-                    }
-                }) {
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-//                return super.getParams();
-                Map<String, String> params = new HashMap<>();
-                params.put("mobile", "9876543210");
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-//                return super.getHeaders();
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-        };
-//        SaveTxnId.getInstance().addToRequestQueue(postRequest);
-//        [ ] https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP 0xd03517e5 NORMAL null
     }
 
     @Override
@@ -393,5 +351,4 @@ public class LoginActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(networkBroadcastReceiver);
     }
-
 }

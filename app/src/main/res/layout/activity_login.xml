@@ -92,16 +92,32 @@
                 app:layout_constraintStart_toStartOf="@+id/otp"
                 app:layout_constraintTop_toBottomOf="@+id/otp" />
 
+            <!--android:textColor="#1565C0"-->
             <TextView
                 android:id="@+id/resend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resend"
-                android:textColor="#1565C0"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/textView"
                 app:layout_constraintStart_toEndOf="@+id/textView" />
 
+            <TextView
+                android:id="@+id/resend_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resend in "
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@+id/textView" />
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="180 sec."
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@+id/resend_text" />
 
             <Button
                 android:id="@+id/getOtp"

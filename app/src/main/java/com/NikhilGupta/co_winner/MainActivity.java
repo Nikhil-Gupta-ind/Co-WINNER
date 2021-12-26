@@ -1,37 +1,81 @@
 package com.NikhilGupta.co_winner;
 
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
+
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.DocumentsContract;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.databinding.ActivityMainBinding;
 import com.NikhilGupta.co_winner.login.LoginActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int MY_PERMISSION_READ_EXTERNAL_STORAGE_REQUEST_CODE = 88;
+    final static String TAG = "Test";
     private NetworkBroadcastReceiver networkBroadcastReceiver;
+    CertificateDownload certificateDownload;
 
     @Override
     public void onBackPressed() {
         finishAffinity();
     }
 
+    RelativeLayout bottomSheetRL;
     ActivityMainBinding binding;
-    Animation animation, animation2, animation3;
+    Animation animation, animation2, animation3, animation4;
 
     SharedPreferences sharedPreferences;
+    static String mToken;
     Toast toast;
+    int flag = 0; // flag for ref id field drawer
+    File pdfFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,89 +85,325 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         startAnimation();
 
+        // Commented Test code
+        /*Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
+                .setAction("OPEN", view -> {
+                    pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "1640444659356.pdf");
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator +
+                            "1640444659356.pdf");
+                    Uri path = Uri.fromFile(pdfFile);
+                    Log.i("Fragment2", String.valueOf(path));
+                    Intent pdfOpenIntent = new Intent(Intent.ACTION_VIEW);
+                    pdfOpenIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    pdfOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    pdfOpenIntent.setDataAndType(path, "application/pdf");
+                    pdfOpenIntent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, path);
+                    try {
+
+                        startActivity(Intent.createChooser(pdfOpenIntent, "Choose an application to open with:"));
+                    } catch (ActivityNotFoundException e) {
+                        // Define what your app should do if no activity can handle the intent.
+                    }
+
+                    *//*shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, textMessage);
+                    shareIntent.setType("text/plain");
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    // Try to invoke the intent.
+                    try {
+                        startActivity(Intent.createChooser(shareIntent, "Share jMusic App"));
+                    } catch (ActivityNotFoundException e) {
+                        // Define what your app should do if no activity can handle the intent.
+                    }*//*
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_blue_bright ))
+                .show();*/
+
+        bottomSheetRL = findViewById(R.id.idRLSheet);
         sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
-        String readToken = sharedPreferences.getString("mToken", null);
-        if (readToken != null){
-            Toast.makeText(this, ""+readToken, Toast.LENGTH_SHORT).show();
+
+        mToken = sharedPreferences.getString("mToken", null);
+        if (mToken != null) {
+            mToken = "Bearer " + mToken;
+            // change menu item name on the basis of token
+            Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
         }
 
-        binding.centerLocator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CenterLocator.class));
-            }
-        });
+        binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CenterLocator.class)));
 
-        binding.certificate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // First check if the user token != null
-                if (sharedPreferences.getString("mToken",null) == null){
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        binding.certificate.setOnClickListener(v -> {
+            // First check if the user token != null
+            if (sharedPreferences.getString("mToken", null) == null) {
+                Toast.makeText(this, "Login First", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            } else {
+                /*if (toast!=null) toast.cancel();
+                toast = Toast.makeText(MainActivity.this, "Coming Up!", Toast.LENGTH_SHORT);
+                toast.show();*/
+
+                if (flag == 0) {
+                    flag = 1;
+                    binding.cardView3.setVisibility(View.VISIBLE);
+                    animation4 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.atg_four);
+                    binding.cardView3.setAnimation(animation4);
                 } else {
-                    if (toast!=null) toast.cancel();
-                    toast = Toast.makeText(MainActivity.this, "Coming Up!", Toast.LENGTH_SHORT);
-                    toast.show();
+                    flag = 0;
+                    animation3 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.atg_three);
+                    binding.cardView3.setAnimation(animation3);
+                    new Handler().postDelayed(() -> binding.cardView3.setVisibility(View.INVISIBLE), 800);
                 }
             }
         });
-        binding.more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (toast != null) toast.cancel();
-                toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
-                toast.show();
+
+        binding.download.setOnClickListener(v -> {
+            if (mToken != null) {
+
+                if (binding.referenceId.getText().toString().trim().length() < 14) {
+                    Toast.makeText(this, "Invalid ID", Toast.LENGTH_SHORT).show();
+                } else {
+                    setupPermissions();
+                }
+            } else {
+                Toast.makeText(this, "Login First", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, LoginActivity.class));
             }
-        });
-        binding.more2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (toast != null) toast.cancel();
-                toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
-                toast.show();
-            }
+
         });
 
-        binding.button.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
+        binding.more.setOnClickListener(v -> {
+            if (toast != null) toast.cancel();
+            toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
+            toast.show();
+        });
+
+        binding.more2.setOnClickListener(v -> {
+            if (toast != null) toast.cancel();
+            toast = Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT);
+            toast.show();
+        });
+
+        binding.button.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // PRESSED
+                    binding.button.setBackgroundResource(R.drawable.bg_btn_bordered);
+                    binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // RELEASED
+                    binding.button.setBackgroundResource(R.drawable.bg_btn);
+                    binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white));
+                    break;
+            }
+            return false;
+        });
+
+        binding.button.setOnClickListener(v -> {
+            String textMessage = "https://github.com/Nikhil-Gupta-ind/jCloud";
+            // Create the text message with a string.
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, textMessage);
+            shareIntent.setType("text/plain");
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            // Try to invoke the intent.
+            try {
+                startActivity(Intent.createChooser(shareIntent, "Share Co-WINNER App"));
+            } catch (ActivityNotFoundException e) {
+                // Define what your app should do if no activity can handle the intent.
+            }
+        });
+    }
+
+    private void setupPermissions() {
+        // If we don't have the record audio permission...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // And if we're on SDK M or later...
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Ask again, nicely, for the permissions.
+                String[] permissionsWeNeed = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(permissionsWeNeed, MY_PERMISSION_READ_EXTERNAL_STORAGE_REQUEST_CODE);
+            }
+        } else {
+            // Otherwise, permissions were granted and we are ready to go!
+            startDownload();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE_REQUEST_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                    startDownload();
+                } else {
+                    Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
+                    finish();
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                }
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
+
+
+    private void startDownload() {
+        Toast.makeText(this, "Downloading...", Toast.LENGTH_SHORT).show();
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        okHttpClientBuilder.addInterceptor(new Interceptor() {
+            @NonNull
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        // PRESSED
-                        binding.button.setBackgroundResource(R.drawable.bg_btn_bordered);
-                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
+                Request request = chain.request();
+                Request.Builder requestBuilder = request
+                        .newBuilder()
+                        .addHeader("Authorization", mToken);
+                return chain.proceed(requestBuilder.build());
+            }
+        });
+        // create Retrofit instance
+//        https://cdn-api.co-vin.in/api/v2/registration/certificate/public/download?beneficiary_reference_id=1234567890123
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("https://cdn-api.co-vin.in/api/v2/registration/certificate/public/")
+                .client(okHttpClientBuilder.build());
+        Retrofit retrofit = builder.build();
+
+        String mReferenceId = binding.referenceId.getText().toString();
+        certificateDownload = retrofit.create(CertificateDownload.class);
+        Call<ResponseBody> pdfCall = certificateDownload.downloadPdf(mToken, mReferenceId);
+        pdfCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+
+                switch (response.code()) {
+                    case 200:
+                        InputStream inputStream = response.body().byteStream();
+                        Log.d("Test", "onResponse1: " + response + "\n" + inputStream.toString());
+//                      inputStream.toString()=>  buffer((buffer(ResponseBodySource(okhttp3.internal.http2.Http2Stream$FramingSource@7905aaf)))).inputStream()
+                        // Create the pdf file
+                        String filename = System.currentTimeMillis() + ".pdf";
+                        pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+                        FileOutputStream fileOutputStream;
+                        try {
+                            pdfFile.createNewFile();
+                            fileOutputStream = new FileOutputStream(pdfFile);
+
+//                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            int read;
+                            byte[] data = new byte[32768];
+
+                            while ((read = inputStream.read(data, 0, data.length)) != -1) {
+//                                byteArrayOutputStream.write(data, 0, read);
+                                fileOutputStream.write(data, 0, read);
+                            }
+//                            return byteArrayOutputStream.toByteArray(); // if in a fun
+
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "onResponse: Download successful!");
+                        Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
+                                .show();
+
+                        // Show an option to open pdf
+                        /*Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
+                                .setAction("OPEN", view -> {
+                                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator +
+                                            filename);
+                                    Uri path = Uri.fromFile(pdfFile);
+                                    Log.i("Fragment2", String.valueOf(path));
+                                    Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+                                    pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    pdfOpenintent.setDataAndType(path, "application/pdf");
+                                    try {
+                                        startActivity(pdfOpenintent);
+                                    } catch (ActivityNotFoundException e) {
+
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_blue_bright ))
+                                .show();*/
                         break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // RELEASED
-                        binding.button.setBackgroundResource(R.drawable.bg_btn);
-                        binding.button.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white));
+
+                    case 400:
+                        Toast.makeText(MainActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 401:
+                        Toast.makeText(MainActivity.this, "Unauthorised access", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 500:
+                        Toast.makeText(MainActivity.this, "Internal Server Error", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
                         break;
                 }
-                return false;
-            }
-        });
-
-        binding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Link not available", Toast.LENGTH_SHORT).show();
-                String textMessage = "https://github.com/Nikhil-Gupta-ind/jCloud";
-                // Create the text message with a string.
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, textMessage);
-                shareIntent.setType("text/plain");
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                // Try to invoke the intent.
+                Log.d(TAG, "onResponse2: " + response + "\nresponse.body = \n" + response.body());
+//                Log.d(TAG, "onResponse3: " + response.headers());
                 try {
-                    startActivity(Intent.createChooser(shareIntent, "Share Co-WINNER App"));
-                } catch (ActivityNotFoundException e) {
-                    // Define what your app should do if no activity can handle the intent.
+                    response.body().close();
+                } catch (Exception e) {
+                    Log.d(TAG, "onResponse: " + e.toString());
                 }
             }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
         });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(R.id.action_log);
+        if (sharedPreferences.getString("mToken", null) != null) {
+            menuItem.setTitle(R.string.logout);
+        } else {
+            menuItem.setTitle(R.string.login);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_log && item.getTitle().equals("Logout")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("mToken", null);
+            editor.apply();
+            item.setTitle(R.string.login);
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (item.getItemId() == R.id.action_log && item.getTitle().equals("Login")) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return true;
+        } else if (item.getItemId() == R.id.about){
+            displayBottomSheet(); return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -144,11 +424,100 @@ public class MainActivity extends AppCompatActivity {
     private void startAnimation() {
         animation = AnimationUtils.loadAnimation(this, R.anim.atg);
         animation2 = AnimationUtils.loadAnimation(this, R.anim.atg_two);
-        animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);
+//        animation3 = AnimationUtils.loadAnimation(this, R.anim.atg_three);
         //Pass Animation
         binding.cardView2.setAnimation(animation);
-        binding.title.setAnimation(animation2);
-        binding.subTitle.setAnimation(animation2);
-        binding.button.setAnimation(animation3);
+        binding.title.setAnimation(animation);
+        binding.subTitle.setAnimation(animation);
+        binding.button.setAnimation(animation2);
+    }
+
+    private void displayBottomSheet(){
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View layout = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_dialog, bottomSheetRL);
+        bottomSheetDialog.setContentView(layout);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.show();
+
+        TextView link = layout.findViewById(R.id.github_link);
+        link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://github.com/Nikhil-Gupta-ind?tab=repositories";
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                /*if (intent.resolveActivity(getPackageManager()) != null){
+                    startActivity(intent);
+                }*/
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void startDownload2() {
+        String mReferenceId = binding.referenceId.getText().toString();
+        URL searchUrl = buildUrl(mReferenceId);
+        Log.d(TAG, "startDownload: " + searchUrl.toString());
+        new downloadTask().execute(searchUrl);
+    }
+
+    public static URL buildUrl(String referenceId) {
+        Uri builtUri = Uri.parse("https://cdn-api.co-vin.in/api/v2/registration/certificate/public/download").buildUpon()
+                .appendQueryParameter("beneficiary_reference_id", referenceId)
+//                .appendQueryParameter("Authorization", mToken)
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException urlException) {
+            urlException.printStackTrace();
+        }
+        return url;
+    }
+
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+            Scanner scanner = new Scanner(in);
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            urlConnection.disconnect();
+        }
+        return null;
+    }
+
+    public static class downloadTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL url = urls[0];
+            String result = null;
+            try {
+                result = getResponseFromHttpUrl(url);
+                Log.d(TAG, "doInBackground: " + result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s != null && !s.equals("")) {
+                Log.d(TAG, "onPostExecute: " + s);
+            } else {
+                Log.d(TAG, "onPostExecute: " + s);
+            }
+        }
     }
 }
