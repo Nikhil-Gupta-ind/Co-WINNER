@@ -3,10 +3,17 @@ package com.NikhilGupta.co_winner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 
 import android.Manifest;
+import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -85,40 +92,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         startAnimation();
 
-        // Commented Test code
-        /*Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
-                .setAction("OPEN", view -> {
-                    pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "1640444659356.pdf");
-                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator +
-                            "1640444659356.pdf");
-                    Uri path = Uri.fromFile(pdfFile);
-                    Log.i("Fragment2", String.valueOf(path));
-                    Intent pdfOpenIntent = new Intent(Intent.ACTION_VIEW);
-                    pdfOpenIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    pdfOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pdfOpenIntent.setDataAndType(path, "application/pdf");
-                    pdfOpenIntent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, path);
-                    try {
-
-                        startActivity(Intent.createChooser(pdfOpenIntent, "Choose an application to open with:"));
-                    } catch (ActivityNotFoundException e) {
-                        // Define what your app should do if no activity can handle the intent.
-                    }
-
-                    *//*shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, textMessage);
-                    shareIntent.setType("text/plain");
-                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    // Try to invoke the intent.
-                    try {
-                        startActivity(Intent.createChooser(shareIntent, "Share jMusic App"));
-                    } catch (ActivityNotFoundException e) {
-                        // Define what your app should do if no activity can handle the intent.
-                    }*//*
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_blue_bright ))
-                .show();*/
-
         bottomSheetRL = findViewById(R.id.idRLSheet);
         sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -131,6 +104,20 @@ public class MainActivity extends AppCompatActivity {
             // change menu item name on the basis of token
             Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
             binding.centerLocator.performClick();
+        }
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel_name";
+            String description = "channel_desc";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
 
         binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CenterLocator.class)));
@@ -263,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startDownload() {
-        Toast.makeText(this, "Downloading...", Toast.LENGTH_SHORT).show();
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         okHttpClientBuilder.addInterceptor(new Interceptor() {
@@ -293,9 +279,11 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (response.code()) {
                     case 200:
+                        Toast.makeText(MainActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
                         InputStream inputStream = response.body().byteStream();
                         Log.d("Test", "onResponse1: " + response + "\n" + inputStream.toString());
 //                      inputStream.toString()=>  buffer((buffer(ResponseBodySource(okhttp3.internal.http2.Http2Stream$FramingSource@7905aaf)))).inputStream()
+
                         // Create the pdf file
                         String filename = System.currentTimeMillis() + ".pdf";
                         pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
@@ -314,35 +302,60 @@ public class MainActivity extends AppCompatActivity {
                                 fileOutputStream.write(data, 0, read);
                             }
 //                            return byteArrayOutputStream.toByteArray(); // if in a fun
-
                             fileOutputStream.close();
                             inputStream.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         Log.d(TAG, "onResponse: Download successful!");
-                        Toast.makeText(MainActivity.this, "Download Successful!", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(binding.mainLayout, "Check your downloads folder", Snackbar.LENGTH_LONG)
-                                .show();
+
+                        /*// DownloadManager
+//                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url + ""));
+                        DownloadManager.Request request = new DownloadManager.Request();
+                        request.setTitle(filename);
+                        request.setMimeType("application/pdf");
+                        request.allowScanningByMediaScanner();
+                        request.setAllowedOverMetered(true);
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,filename);
+                        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                        dm.enqueue(request);*/
 
                         // Show an option to open pdf
-                        /*Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
+                        Uri uri = FileProvider.getUriForFile(MainActivity.this,"com.NikhilGupta.co_winner"+".provider",pdfFile);
+                        Intent pdfOpenIntent = new Intent(Intent.ACTION_VIEW);
+                        pdfOpenIntent.setDataAndType(uri,"application/pdf");
+                        pdfOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                    startActivity(intent);
+                        Snackbar.make(binding.mainLayout, "Download Successful!", Snackbar.LENGTH_LONG)
                                 .setAction("OPEN", view -> {
-                                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator +
-                                            filename);
-                                    Uri path = Uri.fromFile(pdfFile);
-                                    Log.i("Fragment2", String.valueOf(path));
-                                    Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
-                                    pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    pdfOpenintent.setDataAndType(path, "application/pdf");
+                                    // open pdf
                                     try {
-                                        startActivity(pdfOpenintent);
+                                        startActivity(Intent.createChooser(pdfOpenIntent, "Choose an application to open with:"));
                                     } catch (ActivityNotFoundException e) {
-
+                                        // Define what your app should do if no activity can handle the intent.
+                                        Toast.makeText(MainActivity.this, "No app found to open pdf", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .setActionTextColor(getResources().getColor(android.R.color.holo_blue_bright ))
-                                .show();*/
+                                .show();
+
+                        // Notification
+                        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, pdfOpenIntent, 0);
+
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_ID")
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle(filename)
+                                .setContentText("Download complete. Tap to open")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                // Set the intent that will fire when the user taps the notification
+                                .setContentIntent(pendingIntent)
+                                .setAutoCancel(true);
+
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+                        // notificationId is a unique int for each notification that you must define
+                        notificationManager.notify(0, builder.build());
+
                         break;
 
                     case 400:
