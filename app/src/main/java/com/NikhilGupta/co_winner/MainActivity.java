@@ -414,6 +414,11 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             item.setTitle(R.string.login);
             Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+
+            // hide the ref id
+            flag = 0;
+            binding.referenceId.setText("");
+            binding.cardView3.setVisibility(View.INVISIBLE);
             return true;
         } else if (item.getItemId() == R.id.action_log && item.getTitle().equals("Login")) {
             startActivity(new Intent(this, LoginActivity.class));
