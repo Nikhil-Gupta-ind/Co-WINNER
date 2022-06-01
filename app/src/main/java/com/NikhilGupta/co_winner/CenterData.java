@@ -7,14 +7,14 @@ public class CenterData {
     final String TAG = "Data Test";
 
     public CenterData(String name, String address, String block, String district, String state, String vaccine, String from, String to) {
-        this.name = name;
-        this.address = address;
-        this.block = block;
+        this.name     = name;
+        this.address  = address;
+        this.block    = block;
         this.district = district;
-        this.state = state;
-        this.vaccine = vaccine;
-        this.from = from;
-        this.to = to;
+        this.state    = state;
+        this.vaccine  = vaccine;
+        this.from     = from;
+        this.to       = to;
         Log.d(TAG, "CenterData: another object set");
     }
 

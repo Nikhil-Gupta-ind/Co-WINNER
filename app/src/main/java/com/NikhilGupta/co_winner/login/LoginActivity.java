@@ -30,6 +30,8 @@ import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private Thread t;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -125,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "mMobileNo: " + mMobileNo);
         requestOtp(mMobileNo);
 
-        Toast.makeText(this, "OTP Sent", Toast.LENGTH_SHORT).show();
     }
 
     private void startTimer() { // options: run on new thread, make it asynchronous, use AsyncTask, use AsyncTaskLoader Or user Executor. Or Pass the timer to async
@@ -135,7 +136,28 @@ public class LoginActivity extends AppCompatActivity {
         binding.resendText.setVisibility(View.VISIBLE);
         binding.tvTimer.setVisibility(View.VISIBLE);
 
-        timer = new Thread() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int tik = 180;
+                try {
+                    while (tik >= 0){
+                        Log.d("MyThread", "run: Thread running "+tik);
+                        binding.tvTimer.setText(getString(R.string.sec,--tik));
+                        if (tik == 0){
+                            binding.resend.setVisibility(View.VISIBLE);
+                            binding.resendText.setVisibility(View.INVISIBLE);
+                            binding.tvTimer.setVisibility(View.INVISIBLE);
+                        }
+                        Thread.sleep(1000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        /*timer = new Thread() {
             int interval = 180;
             @Override
             public void run() {
@@ -160,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-        timer.start();
+        timer.start();*/
 //        MyTimerTask.execute(timer);
     }
 
@@ -181,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                         mTxnId = response.body().txnId;
                         Log.d(TAG, "txnId: >\n" + mTxnId);
                         Toast.makeText(LoginActivity.this, "OTP Sent", Toast.LENGTH_SHORT).show();
-//                        startTimer(); // probably network transaction and timer is updating on same Ui thread hence collapsing
+                        startTimer(); // probably network transaction and timer is updating on same Ui thread hence collapsing
                         break;
 
                     case 400:

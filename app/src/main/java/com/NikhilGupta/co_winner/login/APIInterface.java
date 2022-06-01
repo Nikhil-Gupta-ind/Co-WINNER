@@ -10,7 +10,6 @@ public interface APIInterface {
     @POST("generateOTP")
     Call<SaveTxnId> getOtp(@Body Map<String, String> map);
 
-    //    @FormUrlEncoded
     @POST("confirmOTP")
     Call<UserToken> submitData(@Body Map<String, String> map);
 }

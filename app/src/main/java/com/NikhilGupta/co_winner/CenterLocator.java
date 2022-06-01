@@ -37,10 +37,10 @@ import java.util.Calendar;
 public class CenterLocator extends AppCompatActivity {
 
     final String TAG = "Test";
-    ImageView imgSearch, imgCal;
-    EditText editPin, editDate;
-    TextView tvNoData;
-    RecyclerView recyclerView;
+    ImageView             imgSearch, imgCal;
+    EditText              editPin, editDate;
+    TextView              tvNoData;
+    RecyclerView          recyclerView;
     CLRecyclerViewAdapter recyclerViewAdapter;
     ArrayList<CenterData> centerDataArrayList;
     private int mm, dd, yy;
@@ -55,120 +55,89 @@ public class CenterLocator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_center_locator);
-        cardView = findViewById(R.id.search_bar_card);
-        imgSearch = findViewById(R.id.imgSearch);
-        editPin = findViewById(R.id.editPincode);
-        editDate = findViewById(R.id.editDated);
-        imgCal = findViewById(R.id.imgCal);
-        tvNoData = findViewById(R.id.noData);
+        cardView     = findViewById(R.id.search_bar_card);
+        imgSearch    = findViewById(R.id.imgSearch);
+        editPin      = findViewById(R.id.editPincode);
+        editDate     = findViewById(R.id.editDated);
+        imgCal       = findViewById(R.id.imgCal);
+        tvNoData     = findViewById(R.id.noData);
         recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
-        Log.d(TAG, "onCreate: RecyclerView initialized");
 
         //        initializeSessionlist();
         centerDataArrayList = new ArrayList<>();
-        Log.d(TAG, "onCreate: centerDataArrayList initialized");
 
         startAnimation();
-        imgSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
-                    Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                    // Dummy Data for Testing
-//                    centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 6","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 7","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 8","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 9","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 10","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 11","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 12","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 13","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 14","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 15","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 16","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 17","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 18","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 19","address","block","district","state","vaccine","from","to"));
-//                    centerDataArrayList.add(new CenterData("Center 20","address","block","district","state","vaccine","from","to"));
-//                    for (CenterData element :
-//                            centerDataArrayList) {
-//                        Log.d(TAG, "onClick: "+element.getName()+" "+element.getAddress()+" "+element.getBlock());
-//                    }
-//
-//                    recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
-//                    Log.d(TAG, "onClick: RecyclerView Adapter initialized");
-//                    recyclerView.setAdapter(recyclerViewAdapter);
-//                    Log.d(TAG, "onClick: setAdapter done!");
-                } else if (editPin.getText().toString().length() < 6) {
-                    Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
-                } else {
-                    displayList();
+        imgSearch.setOnClickListener(v -> {
+            if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
+                Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                // Dummy Data for Testing
+//                dummyData();
+            } else if (editPin.getText().toString().length() < 6) {
+                Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
+            } else {
+                displayList();
+            }
+        });
+        imgCal.setOnClickListener(v -> {
+
+            final Calendar calendar = Calendar.getInstance();
+            mm = calendar.get(Calendar.DATE);
+            dd = calendar.get(Calendar.MONTH);
+            yy = calendar.get(Calendar.YEAR);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(CenterLocator.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    month = month + 1;
+                    String format = "%1$02d"; // two digits
+                    editDate.setText(String.format(format, dayOfMonth) + "-" + String.format(format, month) + "-" + year);
+                    if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
+                        Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                    } else if (editPin.getText().toString().length() < 6) {
+                        Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        displayList();
+                    }
                 }
-            }
+            }, mm, dd, yy);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + 1000);
+            datePickerDialog.show();
+
         });
-        imgCal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Calendar calendar = Calendar.getInstance();
-                mm = calendar.get(Calendar.DATE);
-                dd = calendar.get(Calendar.MONTH);
-                yy = calendar.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CenterLocator.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String format = "%1$02d"; // two digits
-                        editDate.setText(String.format(format, dayOfMonth) + "-" + String.format(format, month) + "-" + year);
-                        if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
-                            Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                        } else if (editPin.getText().toString().length() < 6) {
-                            Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
-                        } else {
-                            displayList();
-                        }
-                    }
-                }, mm, dd, yy);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + 1000);
-                datePickerDialog.show();
-
-            }
-        });
-        editDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Calendar calendar = Calendar.getInstance();
-                mm = calendar.get(Calendar.DATE);
-                dd = calendar.get(Calendar.MONTH);
-                yy = calendar.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CenterLocator.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month + 1;
-                        String format = "%1$02d"; // two digits
-                        editDate.setText(String.format(format, dayOfMonth) + "-" + String.format(format, month) + "-" + year);
-                        if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
-                            Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                        } else if (editPin.getText().toString().length() < 6) {
-                            Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
-                        } else {
-                            displayList();
-                        }
-                    }
-                }, mm, dd, yy);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + 1000);
-                datePickerDialog.show();
-
-            }
-        });
+        editDate.setOnClickListener(v -> imgCal.performClick());
     }
+
+    private void dummyData() {
+        centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 6","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 7","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 8","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 9","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 10","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 11","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 12","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 13","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 14","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 15","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 16","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 17","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 18","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 19","address","block","district","state","vaccine","from","to"));
+        centerDataArrayList.add(new CenterData("Center 20","address","block","district","state","vaccine","from","to"));
+        for (CenterData element :
+                centerDataArrayList) {
+            Log.d(TAG, "onClick: "+element.getName()+" "+element.getAddress()+" "+element.getBlock());
+        }
+
+        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+        recyclerView.setAdapter(recyclerViewAdapter);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
