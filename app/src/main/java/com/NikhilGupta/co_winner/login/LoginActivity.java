@@ -3,7 +3,6 @@ package com.NikhilGupta.co_winner.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,10 +16,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.NikhilGupta.co_winner.MainActivity;
 import com.NikhilGupta.co_winner.NetworkBroadcastReceiver;
 import com.NikhilGupta.co_winner.R;
 import com.NikhilGupta.co_winner.databinding.ActivityLoginBinding;
+import com.NikhilGupta.co_winner.retrofit.RequestInterface;
+import com.NikhilGupta.co_winner.retrofit.RetrofitHelper;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "Test";
     public ActivityLoginBinding binding;
-    private APIInterface apiInterface;
+    private RequestInterface requestInterface;
 
     private String mTxnId;
     private String mOTP;
@@ -156,12 +156,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void requestOtp(String mMobileNo) {
-        apiInterface = MyRetro.getInstance().create(APIInterface.class);
+        requestInterface = RetrofitHelper.getInstance().create(RequestInterface.class);
 
         Map<String, String> mobileMap = new HashMap<>();
         mobileMap.put("mobile", mMobileNo);
 
-        Call<SaveTxnId> otpCall = apiInterface.getOtp(mobileMap);
+        Call<SaveTxnId> otpCall = requestInterface.getOtp(mobileMap);
         otpCall.enqueue(new Callback<SaveTxnId>() {
             @Override
             public void onResponse(@NonNull Call<SaveTxnId> call, @NonNull retrofit2.Response<SaveTxnId> response) {
@@ -225,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
         verifyMap.put("otp", mOTPEncoded);
         verifyMap.put("txnId", mTxnId);
 
-        Call<UserToken> verifyCall = apiInterface.submitData(verifyMap);
+        Call<UserToken> verifyCall = requestInterface.submitData(verifyMap);
         verifyCall.enqueue(new Callback<UserToken>() {
             @Override
             public void onResponse(@NonNull Call<UserToken> call, @NonNull retrofit2.Response<UserToken> response) {
