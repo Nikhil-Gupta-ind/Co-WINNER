@@ -16,4 +16,5 @@
     <string name="github_link">https://github.com/Nikhil-Gupta-ind?tab=repositories</string>
     <string name="user_instruction">The OTP login used here is a temporary login which expires after a short period of time.\nSo please logout and login again if you face any authentication problem.\nThank you.</string>
     <string name="sec">%1$d sec</string>
+    <string name="resend_otp" translatable="false">%1s</string>
 </resources>

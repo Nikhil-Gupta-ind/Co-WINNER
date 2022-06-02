@@ -24,7 +24,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -94,16 +93,7 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetRL = findViewById(R.id.idRLSheet);
         sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
 
-        /**
-         * An important step here to prefix 'Bearer ' to mToken
-         */
-        mToken = sharedPreferences.getString("mToken", null);
-        if (mToken != null) {
-            mToken = "Bearer " + mToken;
-            // change menu item name on the basis of token
-            Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
-            binding.centerLocator.performClick();
-        }
+        getBearerToken();
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -122,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
         binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CenterLocator.class)));
 
         binding.certificate.setOnClickListener(v -> {
+            getBearerToken();
             // First check if the user token != null
-            if (sharedPreferences.getString("mToken", null) == null) {
+            if (mToken == null) {
                 Toast.makeText(this, "Login First", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             } else {
@@ -204,6 +195,19 @@ public class MainActivity extends AppCompatActivity {
                 // Define what your app should do if no activity can handle the intent.
             }
         });
+    }
+
+    private void getBearerToken() {
+        /**
+         * An important step here to prefix 'Bearer ' to mToken
+         */
+        mToken = sharedPreferences.getString("mToken", null);
+        if (mToken != null) {
+            mToken = "Bearer " + mToken;
+            // change menu item name on the basis of token
+            Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
+//            binding.certificate.performClick();
+        }
     }
 
     private void setupPermissions() {
@@ -340,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
 
                         // Notification
-                        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, pdfOpenIntent, 0);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, pdfOpenIntent, PendingIntent.FLAG_IMMUTABLE);
 
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_ID")
                                 .setSmallIcon(R.mipmap.ic_launcher)

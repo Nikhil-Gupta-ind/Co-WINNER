@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mToken;
     private SaveTxnId saveTxnId;
     private UserToken userToken;
-    Thread timer;
+    CountDownTimer mTimer;
 
     NetworkBroadcastReceiver networkBroadcastReceiver;
 
@@ -136,54 +137,22 @@ public class LoginActivity extends AppCompatActivity {
         binding.resendText.setVisibility(View.VISIBLE);
         binding.tvTimer.setVisibility(View.VISIBLE);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                int tik = 180;
-                try {
-                    while (tik >= 0){
-                        Log.d("MyThread", "run: Thread running "+tik);
-                        binding.tvTimer.setText(getString(R.string.sec,--tik));
-                        if (tik == 0){
-                            binding.resend.setVisibility(View.VISIBLE);
-                            binding.resendText.setVisibility(View.INVISIBLE);
-                            binding.tvTimer.setVisibility(View.INVISIBLE);
-                        }
-                        Thread.sleep(1000);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        mTimer = new CountDownTimer(180000, 1000)
+        {
+            public void onTick(long millisUntilFinished) {
+                binding.tvTimer.setText(String.format(getString(R.string.resend_otp), " - " + (millisUntilFinished / 1000) + " sec"));
             }
-        });
 
-        /*timer = new Thread() {
-            int interval = 180;
-            @Override
-            public void run() {
-                try {
-                    while (interval > 0) {
-                        Log.d(TAG, "run: "+(interval));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                binding.tvTimer.setText(getString(R.string.sec,--interval));
-                                if (interval == 0){
-                                    binding.resend.setVisibility(View.VISIBLE);
-                                    binding.resendText.setVisibility(View.INVISIBLE);
-                                    binding.tvTimer.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        });
-                        sleep(1000);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void onFinish()
+            {
+                binding.resend.setVisibility(View.VISIBLE);
+                binding.resendText.setVisibility(View.INVISIBLE);
+                binding.tvTimer.setVisibility(View.INVISIBLE);
+                if (binding.mobile.getText().toString().length() == 10)
+                    binding.getOtp.setEnabled(true);
             }
         };
-        timer.start();*/
-//        MyTimerTask.execute(timer);
+        mTimer.start();
     }
 
     private void requestOtp(String mMobileNo) {
@@ -281,7 +250,8 @@ public class LoginActivity extends AppCompatActivity {
 
 //                        UserToken userToken = new UserToken(mToken);
                         // BTW later we'll try to call the calling activity by writing finish()
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+//                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        finish();
                         break;
 
                     case 400:
