@@ -22,7 +22,7 @@ public class RetrofitHelper {
                 .create();
 
         return new Retrofit.Builder()
-//                .client(getOkHttpClient().build())
+                .client(getOkHttpClient().build())
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

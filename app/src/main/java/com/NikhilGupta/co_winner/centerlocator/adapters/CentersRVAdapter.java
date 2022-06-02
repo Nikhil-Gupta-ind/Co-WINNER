@@ -1,4 +1,4 @@
-package com.NikhilGupta.co_winner;
+package com.NikhilGupta.co_winner.centerlocator.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,17 +10,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.NikhilGupta.co_winner.R;
+import com.NikhilGupta.co_winner.centerlocator.models.CenterData;
 
 import java.util.ArrayList;
 
-public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAdapter.CLViewHolder> {
+public class CentersRVAdapter extends RecyclerView.Adapter<CentersRVAdapter.CLViewHolder> {
     private Context context;
     private ArrayList<CenterData> centerDataArrayList;
     final String TAG = "Test";
 
-    public CLRecyclerViewAdapter(Context context, ArrayList<CenterData> centerDataArrayList) {
+    public CentersRVAdapter(Context context, ArrayList<CenterData> centerDataArrayList) {
         this.context = context;
         this.centerDataArrayList = centerDataArrayList;
         Log.d(TAG, "CLRecyclerViewAdapter: received centerDataArrayList");
@@ -28,14 +28,14 @@ public class CLRecyclerViewAdapter extends RecyclerView.Adapter<CLRecyclerViewAd
 
     @NonNull
     @Override
-    public CLRecyclerViewAdapter.CLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CentersRVAdapter.CLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vh_center_locator, parent, false);
         Log.d(TAG, "onCreateViewHolder: returning created ViewHolder");
         return new CLViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CLRecyclerViewAdapter.CLViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CentersRVAdapter.CLViewHolder holder, int position) {
         CenterData centerData = centerDataArrayList.get(position);
         holder.name.setText(centerData.getName());
 

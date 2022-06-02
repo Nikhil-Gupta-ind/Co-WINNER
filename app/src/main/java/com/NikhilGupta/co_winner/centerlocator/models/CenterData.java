@@ -1,4 +1,4 @@
-package com.NikhilGupta.co_winner;
+package com.NikhilGupta.co_winner.centerlocator.models;
 
 import android.util.Log;
 

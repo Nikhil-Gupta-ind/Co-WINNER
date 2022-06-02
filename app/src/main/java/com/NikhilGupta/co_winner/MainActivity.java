@@ -36,8 +36,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.NikhilGupta.co_winner.centerlocator.CentersActivity;
 import com.NikhilGupta.co_winner.databinding.ActivityMainBinding;
 import com.NikhilGupta.co_winner.login.LoginActivity;
+import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
+import com.NikhilGupta.co_winner.retrofit.RequestInterface;
+import com.NikhilGupta.co_winner.retrofit.RetrofitHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_READ_EXTERNAL_STORAGE_REQUEST_CODE = 88;
     final static String TAG = "Test";
     private NetworkBroadcastReceiver networkBroadcastReceiver;
-    CertificateDownload certificateDownload;
+    RequestInterface requestInterface;
 
     @Override
     public void onBackPressed() {
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
 
-        binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CenterLocator.class)));
+        binding.centerLocator.setOnClickListener(v -> startActivity(new Intent(this, CentersActivity.class)));
 
         binding.certificate.setOnClickListener(v -> {
             getBearerToken();
@@ -253,29 +257,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startDownload() {
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-
-        okHttpClientBuilder.addInterceptor(new Interceptor() {
-            @NonNull
-            @Override
-            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
-                Request request = chain.request();
-                Request.Builder requestBuilder = request
-                        .newBuilder()
-                        .addHeader("Authorization", mToken);
-                return chain.proceed(requestBuilder.build());
-            }
-        });
-        // create Retrofit instance
-//        https://cdn-api.co-vin.in/api/v2/registration/certificate/public/download?beneficiary_reference_id=1234567890123
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://cdn-api.co-vin.in/api/v2/registration/certificate/public/")
-                .client(okHttpClientBuilder.build());
-        Retrofit retrofit = builder.build();
-
         String mReferenceId = binding.referenceId.getText().toString();
-        certificateDownload = retrofit.create(CertificateDownload.class);
-        Call<ResponseBody> pdfCall = certificateDownload.downloadPdf(mToken, mReferenceId);
+        requestInterface = RetrofitHelper.getInstance().create(RequestInterface.class);
+        Call<ResponseBody> pdfCall = requestInterface.downloadPdf(mToken, mReferenceId);
         pdfCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

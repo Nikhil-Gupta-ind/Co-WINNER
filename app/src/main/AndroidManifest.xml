@@ -22,7 +22,7 @@
 
         </activity>
         <activity
-            android:name=".CenterLocator"
+            android:name=".centerlocator.CentersActivity"
             android:exported="true"
             android:label="Center Locator"
             android:parentActivityName=".MainActivity"

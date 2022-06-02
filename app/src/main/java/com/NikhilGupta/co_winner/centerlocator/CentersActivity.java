@@ -1,4 +1,4 @@
-package com.NikhilGupta.co_winner;
+package com.NikhilGupta.co_winner.centerlocator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,7 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.NikhilGupta.co_winner.login.LoginActivity;
+import com.NikhilGupta.co_winner.centerlocator.adapters.CentersRVAdapter;
+import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
+import com.NikhilGupta.co_winner.R;
+import com.NikhilGupta.co_winner.centerlocator.models.CenterData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,14 +36,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CenterLocator extends AppCompatActivity {
+public class CentersActivity extends AppCompatActivity {
 
     final String TAG = "Test";
     ImageView             imgSearch, imgCal;
     EditText              editPin, editDate;
     TextView              tvNoData;
     RecyclerView          recyclerView;
-    CLRecyclerViewAdapter recyclerViewAdapter;
+    CentersRVAdapter recyclerViewAdapter;
     ArrayList<CenterData> centerDataArrayList;
     private int mm, dd, yy;
 
@@ -71,11 +73,11 @@ public class CenterLocator extends AppCompatActivity {
         startAnimation();
         imgSearch.setOnClickListener(v -> {
             if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
-                Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CentersActivity.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
                 // Dummy Data for Testing
 //                dummyData();
             } else if (editPin.getText().toString().length() < 6) {
-                Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CentersActivity.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
             } else {
                 displayList();
             }
@@ -86,16 +88,16 @@ public class CenterLocator extends AppCompatActivity {
             mm = calendar.get(Calendar.DATE);
             dd = calendar.get(Calendar.MONTH);
             yy = calendar.get(Calendar.YEAR);
-            DatePickerDialog datePickerDialog = new DatePickerDialog(CenterLocator.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(CentersActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     month = month + 1;
                     String format = "%1$02d"; // two digits
                     editDate.setText(String.format(format, dayOfMonth) + "-" + String.format(format, month) + "-" + year);
                     if (editPin.getText().toString().isEmpty() || editDate.getText().toString().isEmpty()) {
-                        Toast.makeText(CenterLocator.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CentersActivity.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
                     } else if (editPin.getText().toString().length() < 6) {
-                        Toast.makeText(CenterLocator.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CentersActivity.this, "Incorrect pincode", Toast.LENGTH_SHORT).show();
                     } else {
                         displayList();
                     }
@@ -134,7 +136,7 @@ public class CenterLocator extends AppCompatActivity {
             Log.d(TAG, "onClick: "+element.getName()+" "+element.getAddress()+" "+element.getBlock());
         }
 
-        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
+        recyclerViewAdapter = new CentersRVAdapter(getApplicationContext(),centerDataArrayList);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -184,7 +186,7 @@ public class CenterLocator extends AppCompatActivity {
         Log.d(TAG, "onClick: Initiating fetch Data");
         new FetchData().start();
         Log.d(TAG, "onClick: Fetch Data complete");
-        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(), centerDataArrayList);
+        recyclerViewAdapter = new CentersRVAdapter(getApplicationContext(), centerDataArrayList);
         Log.d(TAG, "onClick: RecyclerView Adapter initialized");
         recyclerView.setAdapter(recyclerViewAdapter);
         Log.d(TAG, "onClick: setAdapter done!");
@@ -203,7 +205,7 @@ public class CenterLocator extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    progressDialog = new ProgressDialog(CenterLocator.this);
+                    progressDialog = new ProgressDialog(CentersActivity.this);
                     progressDialog.setTitle("Please wait.");
                     progressDialog.setMessage("Fetching data...");
                     progressDialog.setIndeterminate(true);

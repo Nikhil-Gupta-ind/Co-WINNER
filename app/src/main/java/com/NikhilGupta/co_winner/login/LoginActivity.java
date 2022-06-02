@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.NikhilGupta.co_winner.NetworkBroadcastReceiver;
+import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
 import com.NikhilGupta.co_winner.R;
 import com.NikhilGupta.co_winner.databinding.ActivityLoginBinding;
 import com.NikhilGupta.co_winner.retrofit.RequestInterface;

@@ -1,4 +1,4 @@
-package com.NikhilGupta.co_winner;
+package com.NikhilGupta.co_winner.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.NikhilGupta.co_winner.MainActivity;
+import com.NikhilGupta.co_winner.R;
+import com.NikhilGupta.co_winner.centerlocator.CentersActivity;
 import com.NikhilGupta.co_winner.login.LoginActivity;
 
 public class NetworkBroadcastReceiver extends BroadcastReceiver {
@@ -18,10 +21,10 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
     TextView networkLabel;
     Context ActivityContext;
 
-    public NetworkBroadcastReceiver(CenterLocator centerLocator) {
-        networkStatus = centerLocator.findViewById(R.id.network_status);
-        networkLabel = centerLocator.findViewById(R.id.network_label);
-        ActivityContext = centerLocator;
+    public NetworkBroadcastReceiver(CentersActivity centersActivity) {
+        networkStatus = centersActivity.findViewById(R.id.network_status);
+        networkLabel = centersActivity.findViewById(R.id.network_label);
+        ActivityContext = centersActivity;
     }
 
     public NetworkBroadcastReceiver(LoginActivity loginActivity) {
