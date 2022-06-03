@@ -2,6 +2,8 @@ package com.NikhilGupta.co_winner.centerlocator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +21,14 @@ import android.widget.Toast;
 
 
 import com.NikhilGupta.co_winner.centerlocator.adapters.CentersRVAdapter;
+import com.NikhilGupta.co_winner.centerlocator.models.ResponseData;
+import com.NikhilGupta.co_winner.centerlocator.repository.CentersRepository;
+import com.NikhilGupta.co_winner.centerlocator.viewmodel.CentersViewModel;
+import com.NikhilGupta.co_winner.centerlocator.viewmodel.CentersViewModelFactory;
 import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
 import com.NikhilGupta.co_winner.R;
-import com.NikhilGupta.co_winner.centerlocator.models.CenterData;
+import com.NikhilGupta.co_winner.retrofit.RequestInterface;
+import com.NikhilGupta.co_winner.retrofit.RetrofitHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +50,7 @@ public class CentersActivity extends AppCompatActivity {
     EditText              editPin, editDate;
     TextView              tvNoData;
     RecyclerView          recyclerView;
-    CentersRVAdapter recyclerViewAdapter;
-    ArrayList<CenterData> centerDataArrayList;
+    CentersRVAdapter      recyclerViewAdapter;
     private int mm, dd, yy;
 
     Handler handler = new Handler();
@@ -52,6 +58,7 @@ public class CentersActivity extends AppCompatActivity {
 
     CardView cardView;
     private NetworkBroadcastReceiver networkBroadcastReceiver;
+    private CentersViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +71,14 @@ public class CentersActivity extends AppCompatActivity {
         imgCal       = findViewById(R.id.imgCal);
         tvNoData     = findViewById(R.id.noData);
         recyclerView = findViewById(R.id.recyclerView); //initializing recyclerview
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//adding LayoutManager
+        recyclerViewAdapter = new CentersRVAdapter();
+        setupViewModel();
+        recyclerView.setAdapter(recyclerViewAdapter);
 
-        //        initializeSessionlist();
-        centerDataArrayList = new ArrayList<>();
+
 
         startAnimation();
         imgSearch.setOnClickListener(v -> {
@@ -110,34 +120,30 @@ public class CentersActivity extends AppCompatActivity {
         editDate.setOnClickListener(v -> imgCal.performClick());
     }
 
-    private void dummyData() {
-        centerDataArrayList.add(new CenterData("Center 1","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 2","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 3","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 4","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 5","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 6","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 7","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 8","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 9","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 10","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 11","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 12","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 13","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 14","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 15","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 16","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 17","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 18","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 19","address","block","district","state","vaccine","from","to"));
-        centerDataArrayList.add(new CenterData("Center 20","address","block","district","state","vaccine","from","to"));
-        for (CenterData element :
-                centerDataArrayList) {
-            Log.d(TAG, "onClick: "+element.getName()+" "+element.getAddress()+" "+element.getBlock());
-        }
-
-        recyclerViewAdapter = new CentersRVAdapter(getApplicationContext(),centerDataArrayList);
-        recyclerView.setAdapter(recyclerViewAdapter);
+    private void setupViewModel() {
+        RequestInterface requestInterface = RetrofitHelper.getInstance()
+                .create(RequestInterface.class);
+        CentersRepository repository = new CentersRepository(requestInterface);
+        CentersViewModelFactory factory = new CentersViewModelFactory(repository);
+        viewModel = new ViewModelProvider(this, factory).get(CentersViewModel.class);
+        viewModel.getSessionsLiveData().observe(this, new Observer<ResponseData>() {
+            @Override
+            public void onChanged(ResponseData responseData) {
+                if (responseData != null) {
+                    recyclerViewAdapter.updateDataList(responseData.getSessions());
+                    if (responseData.getSessions().size() == 0) {
+                        tvNoData.setText(getString(R.string.error_message));
+                    } else {
+                        tvNoData.setText("");
+                    }
+                }
+                handler.post(() -> {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                });
+            }
+        });
+        Log.d(TAG, "setupViewModel: ");
     }
 
     @Override
@@ -170,26 +176,23 @@ public class CentersActivity extends AppCompatActivity {
         }, 1000);
     }
 
-    private void initializeSessionlist() {
-//        sessionList = new ArrayList<>();
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,sessionList);
-//        listView.setAdapter(adapter);
-        centerDataArrayList = new ArrayList<>();
-        Log.d(TAG, "initializeSessionlist: centerDataArrayList initialized");
-//        recyclerViewAdapter = new CLRecyclerViewAdapter(getApplicationContext(),centerDataArrayList);
-//        Log.d(TAG, "initializeSessionlist: RecyclerView Adapter initialized");
-//        recyclerView.setAdapter(recyclerViewAdapter);
-//        Log.d(TAG, "initializeSessionlist: setAdapter done!");
-    }
-
     private void displayList() {
-        Log.d(TAG, "onClick: Initiating fetch Data");
-        new FetchData().start();
-        Log.d(TAG, "onClick: Fetch Data complete");
-        recyclerViewAdapter = new CentersRVAdapter(getApplicationContext(), centerDataArrayList);
-        Log.d(TAG, "onClick: RecyclerView Adapter initialized");
-        recyclerView.setAdapter(recyclerViewAdapter);
-        Log.d(TAG, "onClick: setAdapter done!");
+//        new FetchData().start();
+//        recyclerViewAdapter.updateDataList(responseData.getSessions());
+
+        String pincode = editPin.getText().toString();
+        String date = editDate.getText().toString();
+
+        handler.post(() -> {
+            progressDialog = new ProgressDialog(CentersActivity.this);
+            progressDialog.setTitle("Please wait.");
+            progressDialog.setMessage("Fetching data...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setIndeterminateDrawable(getDrawable(R.drawable.progressbar_back));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        });
+        viewModel.getSessions(pincode, date);
     }
 
     class FetchData extends Thread {
@@ -239,7 +242,7 @@ public class CentersActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(data);
                     JSONArray sessions = jsonObject.getJSONArray("sessions");
 //                    sessionList.clear();
-                    centerDataArrayList.clear();
+//                    centerDataArrayList.clear();
                     for (int i = 0; i < sessions.length(); i++) {
                         JSONObject names = sessions.getJSONObject(i);
                         String name, address, block, district, state, vaccine, from, to;
@@ -253,10 +256,10 @@ public class CentersActivity extends AppCompatActivity {
                         to = names.getString("to");
 //                        sessionList.add(name);
                         Log.d(TAG, "run: " + name + address + block + district + state + vaccine + from + to);
-                        centerDataArrayList.add(new CenterData(name, address, block, district, state, vaccine, from, to));
-                        for (CenterData data : centerDataArrayList) {
-                            Log.d(TAG, "run: " + data.getName() + data.getAddress() + data.getBlock() + "\n");
-                        }
+//                        centerDataArrayList.add(new CenterData(name, address, block, district, state, vaccine, from, to));
+//                        for (CenterData data : centerDataArrayList) {
+//                            Log.d(TAG, "run: " + data.getName() + data.getAddress() + data.getBlock() + "\n");
+//                        }
                     }
                 }
 //                else {

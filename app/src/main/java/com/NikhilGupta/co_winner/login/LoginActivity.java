@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
@@ -31,13 +30,12 @@ import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Thread t;
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
+    public static final String REGEX_PHONE_MOBILE = "[6789]{1}[0-9]{9}";
     private static final String TAG = "Test";
     public ActivityLoginBinding binding;
     private RequestInterface requestInterface;
@@ -46,8 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     private String mOTP;
     private String mOTPEncoded;
     private String mToken;
-    private SaveTxnId saveTxnId;
-    private UserToken userToken;
     CountDownTimer mTimer;
 
     NetworkBroadcastReceiver networkBroadcastReceiver;
@@ -62,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         final EditText otpET = binding.otp;
         final Button getOtpBT = binding.getOtp;
         final Button verifyBT = binding.verify;
-        final ProgressBar loadingPB = binding.loading;
 
         // Enable Get OTP button when there's text to send
         mobileET.addTextChangedListener(new TextWatcher() {
@@ -86,6 +81,11 @@ public class LoginActivity extends AppCompatActivity {
                     binding.resend.setVisibility(View.GONE);
                     verifyBT.setEnabled(false);
                 }
+                if (mTimer != null) {
+                    mTimer.cancel();
+                    binding.resendText.setVisibility(View.INVISIBLE);
+                    binding.tvTimer.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -108,12 +108,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        binding.resend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOtpBT.setEnabled(true);
-                getOtpBT.performClick();
-            }
+        binding.resend.setOnClickListener(v -> {
+            getOtpBT.setEnabled(true);
+            getOtpBT.performClick();
         });
     }
 
@@ -126,7 +123,12 @@ public class LoginActivity extends AppCompatActivity {
 
         String mMobileNo = binding.mobile.getText().toString();
         Log.d(TAG, "mMobileNo: " + mMobileNo);
-        requestOtp(mMobileNo);
+        if (!mMobileNo.matches(REGEX_PHONE_MOBILE)) {
+            binding.mobile.setError("Please enter valid Mobile no.");
+            binding.mobile.requestFocus();
+        } else {
+            requestOtp(mMobileNo);
+        }
 
     }
 
@@ -237,16 +239,11 @@ public class LoginActivity extends AppCompatActivity {
                         binding.loading.setVisibility(View.GONE);
                         mToken = response.body().token;
                         Log.d(TAG, "onResponse: " + response);
-                        Log.d(TAG, "saving token in sharedprefs: "+mToken);
+                        Log.d(TAG, "saving token in sharedPrefs: "+mToken);
                         SharedPreferences sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("mToken",mToken);
                         editor.apply();
-
-                        String readToken = sharedPreferences.getString("mToken", null);
-                        if (readToken != null){
-//                            Toast.makeText(LoginActivity.this, ""+readToken, Toast.LENGTH_SHORT).show();
-                        }
 
 //                        UserToken userToken = new UserToken(mToken);
                         // BTW later we'll try to call the calling activity by writing finish()
@@ -289,7 +286,7 @@ public class LoginActivity extends AppCompatActivity {
                     mToken = response.body().token;
                     UserToken userToken = new UserToken(mToken);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("usertoken",mToken);
+                    intent.putExtra("userToken",mToken);
 //                    startActivity(intent);
                 } else {
                     Log.d(TAG, "onResponse2: Something is wrong\n" + response);

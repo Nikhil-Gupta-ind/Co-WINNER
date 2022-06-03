@@ -1,13 +1,10 @@
 package com.NikhilGupta.co_winner.retrofit;
 
-import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -30,16 +27,12 @@ public class RetrofitHelper {
 
     private static OkHttpClient.Builder getOkHttpClient() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        okHttpClientBuilder.addInterceptor(new Interceptor() {
-            @NonNull
-            @Override
-            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
-                Request request = chain.request()
-                        .newBuilder()
+        okHttpClientBuilder.addInterceptor(chain -> {
+            Request request = chain.request()
+                    .newBuilder()
 //                        .addHeader("Authorization", mToken)
-                        .build();
-                return chain.proceed(request);
-            }
+                    .build();
+            return chain.proceed(request);
         });
 
         return okHttpClientBuilder;

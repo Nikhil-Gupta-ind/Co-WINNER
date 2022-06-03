@@ -1,6 +1,7 @@
 package com.NikhilGupta.co_winner.retrofit;
 
 
+import com.NikhilGupta.co_winner.centerlocator.models.ResponseData;
 import com.NikhilGupta.co_winner.login.SaveTxnId;
 import com.NikhilGupta.co_winner.login.UserToken;
 
@@ -17,6 +18,14 @@ import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 
 public interface RequestInterface {
+
+    // curl -X GET "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=110001&date=31-03-2021" -H "accept: application/json" -H "Accept-Language: hi_IN"
+
+    @GET("appointment/sessions/public/findByPin")
+    Call<ResponseData> getSessions(
+            @Query("pincode") String pincode,
+            @Query("date") String date
+    );
 
     @POST("auth/public/generateOTP")
     Call<SaveTxnId> getOtp(@Body Map<String, String> map);
