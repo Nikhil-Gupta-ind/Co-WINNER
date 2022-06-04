@@ -3,6 +3,8 @@ package com.NikhilGupta.co_winner.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.NikhilGupta.co_winner.MainActivity;
 import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
 import com.NikhilGupta.co_winner.R;
 import com.NikhilGupta.co_winner.databinding.ActivityLoginBinding;
@@ -243,12 +246,23 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("mToken",mToken);
+                        editor.putLong("lastLogin", System.currentTimeMillis());
                         editor.apply();
+                        AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                        alertDialog.setTitle("Login Successful!");
+                        alertDialog.setMessage("This app uses temporary login session valid for 5 minutes");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Got it",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        finishLoginActivity();
+                                    }
+                                });
+                        alertDialog.show();
 
 //                        UserToken userToken = new UserToken(mToken);
                         // BTW later we'll try to call the calling activity by writing finish()
 //                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        finish();
                         break;
 
                     case 400:
@@ -311,6 +325,10 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void finishLoginActivity() {
+        finish();
     }
 
     @Override

@@ -2,146 +2,152 @@ package com.NikhilGupta.co_winner.centerlocator.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class SessionsItem{
-	private String date;
-	private String addressL;
-	private int minAgeLimit;
-	private String nameL;
-	private String fee;
-	private String feeType;
-	private double jsonMemberLong;
+public class SessionsItem {
+    @SerializedName("center_id")
+    private int centerId;
 
-	@SerializedName("district_name")
-	private String districtName;
+    private String name;
+    private String address;
 
-	@SerializedName("block_name")
-	private String blockName;
-	private String stateName;
-	private String from;
-	private double lat;
-	private String pincode;
-	private String address;
-	private String districtNameL;
-	private String sessionId;
-	private String stateNameL;
-	private int availableCapacity;
-	private String blockNameL;
-	private String vaccine;
-	private List<Slots> slots;
-	private int centerId;
-	private String name;
-	private String to;
-	private int availableCapacityDose2;
-	private String walkinInd;
-	private int availableCapacityDose1;
+    @SerializedName("state_name")
+    private String stateName;
 
-	public String getDate(){
-		return date;
-	}
+    @SerializedName("district_name")
+    private String districtName;
 
-	public String getAddressL(){
-		return addressL;
-	}
+    @SerializedName("block_name")
+    private String blockName;
 
-	public int getMinAgeLimit(){
-		return minAgeLimit;
-	}
+    private String pincode;
+    private String from;
+    private String to;
+    private double lat;
 
-	public String getNameL(){
-		return nameL;
-	}
+    @SerializedName("long")
+    private double longitude;
 
-	public String getFee(){
-		return fee;
-	}
+    @SerializedName("fee_type")
+    private String feeType;
 
-	public String getFeeType(){
-		return feeType;
-	}
+    @SerializedName("session_id")
+    private String sessionId;
 
-	public double getJsonMemberLong(){
-		return jsonMemberLong;
-	}
+    private String date;
 
-	public String getDistrictName(){
-		return districtName;
-	}
+    @SerializedName("available_capacity")
+    private int availableCapacity;
 
-	public String getBlockName(){
-		return blockName;
-	}
+    @SerializedName("available_capacity_dose1")
+    private int availableCapacityDose1;
 
-	public String getStateName(){
-		return stateName;
-	}
+    @SerializedName("available_capacity_dose2")
+    private int availableCapacityDose2;
 
-	public String getFrom(){
-		return from;
-	}
+    private String fee;
 
-	public double getLat(){
-		return lat;
-	}
+    @SerializedName("min_age_limit")
+    private int minAgeLimit;
 
-	public String getPincode(){
-		return pincode;
-	}
+    @SerializedName("max_age_limit")
+    private int maxAgeLimit;
 
-	public String getAddress(){
-		return address;
-	}
+    @SerializedName("allow_all_age")
+    private boolean allowAllAge;
 
-	public String getDistrictNameL(){
-		return districtNameL;
-	}
+    private String vaccine;
+    private ArrayList<Slots> slots;
 
-	public String getSessionId(){
-		return sessionId;
-	}
+    public int getCenterId() {
+        return centerId;
+    }
 
-	public String getStateNameL(){
-		return stateNameL;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getAvailableCapacity(){
-		return availableCapacity;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getBlockNameL(){
-		return blockNameL;
-	}
+    public String getStateName() {
+        return stateName;
+    }
 
-	public String getVaccine(){
-		return vaccine;
-	}
+    public String getDistrictName() {
+        return districtName;
+    }
 
-	public List<Slots> getSlots(){
-		return slots;
-	}
+    public String getBlockName() {
+        return blockName;
+    }
 
-	public int getCenterId(){
-		return centerId;
-	}
+    public String getPincode() {
+        return pincode;
+    }
 
-	public String getName(){
-		return name;
-	}
+    public String getFrom() {
+        return from;
+    }
 
-	public String getTo(){
-		return to;
-	}
+    public String getTo() {
+        return to;
+    }
 
-	public int getAvailableCapacityDose2(){
-		return availableCapacityDose2;
-	}
+    public double getLat() {
+        return lat;
+    }
 
-	public String getWalkinInd(){
-		return walkinInd;
-	}
+    public double getLongitude() {
+        return longitude;
+    }
 
-	public int getAvailableCapacityDose1(){
-		return availableCapacityDose1;
-	}
+    public String getFeeType() {
+        return feeType;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public int getAvailableCapacity() {
+        return availableCapacity;
+    }
+
+    public int getAvailableCapacityDose1() {
+        return availableCapacityDose1;
+    }
+
+    public int getAvailableCapacityDose2() {
+        return availableCapacityDose2;
+    }
+
+    public String getFee() {
+        return fee;
+    }
+
+    public int getMinAgeLimit() {
+        return minAgeLimit;
+    }
+
+    public int getMaxAgeLimit() {
+        return maxAgeLimit;
+    }
+
+    public boolean isAllowAllAge() {
+        return allowAllAge;
+    }
+
+    public String getVaccine() {
+        return vaccine;
+    }
+
+    public ArrayList<Slots> getSlots() {
+        return slots;
+    }
 }

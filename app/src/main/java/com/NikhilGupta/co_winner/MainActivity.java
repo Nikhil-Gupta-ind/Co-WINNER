@@ -10,10 +10,12 @@ import androidx.core.content.FileProvider;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.download.setOnClickListener(v -> {
+            getBearerToken();
             if (mToken != null) {
 
                 if (binding.referenceId.getText().toString().trim().length() < 14) {
@@ -149,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                     setupPermissions();
                 }
             } else {
+                flag = 0;
+                animation3 = AnimationUtils.loadAnimation(MainActivity.this, R.anim.atg_three);
+                binding.cardView3.setAnimation(animation3);
+                new Handler().postDelayed(() -> binding.cardView3.setVisibility(View.INVISIBLE), 800);
                 Toast.makeText(this, "Login First", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, LoginActivity.class));
             }
@@ -201,16 +208,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * An important step here to prefix 'Bearer ' to mToken
+     */
     private void getBearerToken() {
-        /**
-         * An important step here to prefix 'Bearer ' to mToken
-         */
-        mToken = sharedPreferences.getString("mToken", null);
-        if (mToken != null) {
-            mToken = "Bearer " + mToken;
-            // change menu item name on the basis of token
-            Log.d(TAG, "added bearer to sharedprefs: \n" + mToken);
-//            binding.certificate.performClick();
+        String oldToken = sharedPreferences.getString("mToken", null);
+        if (oldToken != null) {
+            long lastLogin = sharedPreferences.getLong("lastLogin", 0);
+            if (System.currentTimeMillis() - lastLogin > 300000) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("mToken",null);
+                editor.putLong("lastLogin", 0);
+                editor.apply();
+            } else {
+                mToken = "Bearer " + oldToken;
+                // change menu item name on the basis of token
+                Log.d(TAG, "Added bearer to sharedPrefs: \n" + mToken);
+            }
+        } else {
+            mToken = null;
         }
     }
 
@@ -272,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 //                      inputStream.toString()=>  buffer((buffer(ResponseBodySource(okhttp3.internal.http2.Http2Stream$FramingSource@7905aaf)))).inputStream()
 
                         // Create the pdf file
-                        String filename = System.currentTimeMillis() + ".pdf";
+                        String filename = "Vaccine certificate CoWINNER " + System.currentTimeMillis()/1000 + ".pdf";
                         pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
 
                         FileOutputStream fileOutputStream;
