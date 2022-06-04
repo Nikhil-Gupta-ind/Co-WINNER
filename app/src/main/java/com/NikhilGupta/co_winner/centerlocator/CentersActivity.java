@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 
 import com.NikhilGupta.co_winner.centerlocator.adapters.CentersRVAdapter;
-import com.NikhilGupta.co_winner.centerlocator.models.ResponseData;
+import com.NikhilGupta.co_winner.centerlocator.models.SessionsResponse;
 import com.NikhilGupta.co_winner.centerlocator.repository.CentersRepository;
 import com.NikhilGupta.co_winner.centerlocator.viewmodel.CentersViewModel;
 import com.NikhilGupta.co_winner.centerlocator.viewmodel.CentersViewModelFactory;
@@ -126,9 +126,9 @@ public class CentersActivity extends AppCompatActivity {
         CentersRepository repository = new CentersRepository(requestInterface);
         CentersViewModelFactory factory = new CentersViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(CentersViewModel.class);
-        viewModel.getSessionsLiveData().observe(this, new Observer<ResponseData>() {
+        viewModel.getSessionsLiveData().observe(this, new Observer<SessionsResponse>() {
             @Override
-            public void onChanged(ResponseData responseData) {
+            public void onChanged(SessionsResponse responseData) {
                 if (responseData != null) {
                     recyclerViewAdapter.updateDataList(responseData.getSessions());
                     if (responseData.getSessions().size() == 0) {

@@ -5,7 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.NikhilGupta.co_winner.centerlocator.models.ResponseData;
+import com.NikhilGupta.co_winner.centerlocator.models.CentersResponse;
+import com.NikhilGupta.co_winner.centerlocator.models.SessionsResponse;
 import com.NikhilGupta.co_winner.centerlocator.repository.CentersRepository;
 
 public class CentersViewModel extends ViewModel {
@@ -16,12 +17,18 @@ public class CentersViewModel extends ViewModel {
     }
 
     public void getSessions(String pincode, String date) {
-        Log.d("Test", "getSessions: ");
         centersRepository.getSessions(pincode, date);
     }
 
-    public LiveData<ResponseData> getSessionsLiveData() {
-        Log.d("Test", "getSessionsLiveData: ");
+    public LiveData<SessionsResponse> getSessionsLiveData() {
         return centersRepository.getSessionsLiveData();
+    }
+
+    public void getCentersByLocation(long lat, long longitude) {
+        centersRepository.getCentersByLocation(lat, longitude);
+    }
+
+    public LiveData<CentersResponse> getCentersLiveData() {
+        return centersRepository.getCentersResponseLiveData();
     }
 }

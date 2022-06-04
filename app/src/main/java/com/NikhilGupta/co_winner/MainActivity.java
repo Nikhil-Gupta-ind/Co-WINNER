@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.NikhilGupta.co_winner.centerlocator.CentersActivity;
+import com.NikhilGupta.co_winner.centerlocator.CentersByLocationActivity;
 import com.NikhilGupta.co_winner.databinding.ActivityMainBinding;
 import com.NikhilGupta.co_winner.login.LoginActivity;
 import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
@@ -163,9 +164,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.more.setOnClickListener(v -> {
-            if (toast != null) toast.cancel();
-            toast = Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT);
-            toast.show();
+            startActivity(new Intent(this, CentersByLocationActivity.class));
         });
 
         binding.more2.setOnClickListener(v -> {
