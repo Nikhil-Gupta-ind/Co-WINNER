@@ -168,9 +168,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.more2.setOnClickListener(v -> {
-            if (toast != null) toast.cancel();
-            toast = Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT);
-            toast.show();
+            startActivity(new Intent(this, WebviewActivity.class));
+//            if (toast != null) toast.cancel();
+//            toast = Toast.makeText(this, "Coming Soon! in new updates", Toast.LENGTH_SHORT);
+//            toast.show();
         });
 
         binding.button.setOnTouchListener((v, event) -> {

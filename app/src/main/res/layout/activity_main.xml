@@ -180,13 +180,13 @@
                                 android:layout_marginBottom="8dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:clickable="true"
-                                android:src="@mipmap/ic_launcher_round" />
+                                android:src="@drawable/vector" />
 
                             <TextView
                                 android:id="@+id/apps"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="More Features"
+                                android:text="Co-Win Official"
                                 android:textAlignment="center"
                                 android:textColor="#172646"
                                 android:textSize="16dp" />
