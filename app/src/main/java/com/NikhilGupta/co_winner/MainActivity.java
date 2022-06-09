@@ -66,7 +66,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-
+// TODO (1) BaseActivity to have receivers and view common in all activities
+// TODO (2) Application class to have permissions and services common to all
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_READ_EXTERNAL_STORAGE_REQUEST_CODE = 88;
@@ -467,18 +468,18 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetDialog.show();
 
         TextView link = layout.findViewById(R.id.github_link);
-        link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://github.com/Nikhil-Gupta-ind?tab=repositories";
-                Uri uri = Uri.parse(url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                /*if (intent.resolveActivity(getPackageManager()) != null){
-                    startActivity(intent);
-                }*/
-                startActivity(intent);
-            }
-        });
+//        link.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String url = "https://github.com/Nikhil-Gupta-ind?tab=repositories";
+//                Uri uri = Uri.parse(url);
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                /*if (intent.resolveActivity(getPackageManager()) != null){
+//                    startActivity(intent);
+//                }*/
+//                startActivity(intent);
+//            }
+//        });
     }
 
     private void startDownload2() {

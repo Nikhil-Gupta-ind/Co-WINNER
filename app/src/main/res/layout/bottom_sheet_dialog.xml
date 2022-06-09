@@ -52,6 +52,7 @@
         android:layout_toRightOf="@id/textView2"
         android:text="@string/github_link"
         android:textColor="#0277BD"
+        android:autoLink="web"
         android:textSize="15sp"
         android:textStyle="italic" />
 

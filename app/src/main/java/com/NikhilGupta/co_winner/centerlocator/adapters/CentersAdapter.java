@@ -1,5 +1,6 @@
 package com.NikhilGupta.co_winner.centerlocator.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class CentersAdapter extends RecyclerView.Adapter<CentersAdapter.CentersVH>{
+    private final ItemClickListener mClickListener;
     private final ArrayList<CentersItem> centersItems = new ArrayList<>();
+
+    public CentersAdapter(ItemClickListener mClickListener) {
+        this.mClickListener = mClickListener;
+    }
 
     @NonNull
     @Override
@@ -31,8 +37,7 @@ public class CentersAdapter extends RecyclerView.Adapter<CentersAdapter.CentersV
         String block = centersItem.getBlockName();
         String state = centersItem.getStateName();
 
-        holder.address.setText(String.format("Address:\n%s,\n%s, %s \n%s", location, district, block, state));
-        holder.state.setText("");
+        holder.address.setText(String.format("%s, %s, %s, %s", location, district, block, state));
         holder.pincode.setText(String.format("Pincode: %s", centersItem.getPincode()));
     }
 
@@ -41,21 +46,27 @@ public class CentersAdapter extends RecyclerView.Adapter<CentersAdapter.CentersV
         return centersItems.size();
     }
 
+    public interface ItemClickListener {
+        void onItemClick(View v, int pos);
+    }
+
     public void updateDataList(ArrayList<CentersItem> list) {
         centersItems.clear(); // Always clean old data
         centersItems.addAll(list);
         notifyDataSetChanged();
     }
 
-    public static class CentersVH extends RecyclerView.ViewHolder {
-        TextView name, address, state, pincode;
+    public class CentersVH extends RecyclerView.ViewHolder{
+        TextView name, address, pincode;
 
         public CentersVH(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             address = itemView.findViewById(R.id.address);
-            state = itemView.findViewById(R.id.state);
             pincode = itemView.findViewById(R.id.pincode);
+            itemView.setOnClickListener(view -> {
+                mClickListener.onItemClick(itemView,getAdapterPosition());
+            });
         }
     }
 }

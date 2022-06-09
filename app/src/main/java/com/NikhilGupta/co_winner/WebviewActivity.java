@@ -2,6 +2,7 @@ package com.NikhilGupta.co_winner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +11,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.NikhilGupta.co_winner.receivers.NetworkBroadcastReceiver;
+
 public class WebviewActivity extends AppCompatActivity {
 
-    WebView webView;
+    static WebView webView;
     ProgressBar progressBar;
+    private NetworkBroadcastReceiver networkBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,30 @@ public class WebviewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        webView.loadUrl("https://www.cowin.gov.in/");
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        networkBroadcastReceiver = new NetworkBroadcastReceiver(this);
+        registerReceiver(networkBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkBroadcastReceiver);
     }
 
     @Override
     public void onBackPressed() {
         if (webView.isFocused() && webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
+    }
+    public static void loadPage() {
+        webView.loadUrl("https://www.cowin.gov.in/");
     }
 }

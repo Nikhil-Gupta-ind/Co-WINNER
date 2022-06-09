@@ -34,8 +34,8 @@ public interface RequestInterface {
 
     @GET("appointment/centers/public/findByLatLong")
     Call<CentersResponse>  getCentersByLocation(
-            @Query("lat") long lat,
-            @Query("long") long longitude
+            @Query("lat") double lat,
+            @Query("long") double longitude
     );
 
     // curl -X POST "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"

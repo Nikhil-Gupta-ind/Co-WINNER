@@ -24,7 +24,7 @@ public class CentersViewModel extends ViewModel {
         return centersRepository.getSessionsLiveData();
     }
 
-    public void getCentersByLocation(long lat, long longitude) {
+    public void getCentersByLocation(double lat, double longitude) {
         centersRepository.getCentersByLocation(lat, longitude);
     }
 

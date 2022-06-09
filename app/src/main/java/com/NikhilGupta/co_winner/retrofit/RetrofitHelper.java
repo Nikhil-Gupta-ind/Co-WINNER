@@ -1,6 +1,7 @@
 package com.NikhilGupta.co_winner.retrofit;
 
 
+import com.NikhilGupta.co_winner.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,7 +12,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
-    final static String BASE_URL = "https://cdn-api.co-vin.in/api/v2/";
 
     public static Retrofit getInstance() {
         Gson gson = new GsonBuilder()
@@ -20,7 +20,7 @@ public class RetrofitHelper {
 
         return new Retrofit.Builder()
                 .client(getOkHttpClient().build())
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.REST_HOST)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }

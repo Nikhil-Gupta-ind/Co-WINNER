@@ -43,7 +43,7 @@ public class CentersRepository {
         return sessionsLiveData;
     }
 
-    public void getCentersByLocation(long lat, long longitude) {
+    public void getCentersByLocation(double lat, double longitude) {
         requestInterface.getCentersByLocation(lat, longitude)
                 .enqueue(new Callback<CentersResponse>() {
                     @Override

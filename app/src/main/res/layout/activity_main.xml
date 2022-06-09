@@ -99,7 +99,7 @@
                                 android:layout_marginBottom="8dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:clickable="true"
-                                android:src="@drawable/nearby" />
+                                android:src="@drawable/nearby_centres" />
 
                             <TextView
                                 android:id="@+id/review"

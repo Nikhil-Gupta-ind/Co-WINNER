@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.NikhilGupta.co_winner.MainActivity;
 import com.NikhilGupta.co_winner.R;
+import com.NikhilGupta.co_winner.WebviewActivity;
 import com.NikhilGupta.co_winner.centerlocator.CentersActivity;
+import com.NikhilGupta.co_winner.centerlocator.CentersByLocationActivity;
 import com.NikhilGupta.co_winner.login.LoginActivity;
 
 public class NetworkBroadcastReceiver extends BroadcastReceiver {
@@ -39,6 +41,18 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
         ActivityContext = mainActivity;
     }
 
+    public NetworkBroadcastReceiver(CentersByLocationActivity centersByLocationActivity) {
+        networkStatus = centersByLocationActivity.findViewById(R.id.network_status);
+        networkLabel = centersByLocationActivity.findViewById(R.id.network_label);
+        ActivityContext = centersByLocationActivity;
+    }
+
+    public NetworkBroadcastReceiver(WebviewActivity webviewActivity) {
+        networkStatus = webviewActivity.findViewById(R.id.network_status);
+        networkLabel = webviewActivity.findViewById(R.id.network_label);
+        ActivityContext = webviewActivity;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -52,6 +66,9 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
             networkLabel.setText(ActivityContext.getResources().getString(R.string.back_online));
             networkStatus.setVisibility(View.VISIBLE);
             new Handler().postDelayed(() -> networkStatus.setVisibility(View.GONE), 3000);
+            if (context instanceof WebviewActivity ) {
+                WebviewActivity.loadPage();
+            }
         } else {
             networkStatus.setBackgroundColor(ActivityContext.getResources().getColor(R.color.black));
             networkLabel.setText(ActivityContext.getResources().getString(R.string.no_connection));
